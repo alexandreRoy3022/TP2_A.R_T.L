@@ -1,14 +1,13 @@
 from flask import Flask, request, jsonify
 from models import db
-from models.stocks import Stock
+from models.stock import Stock
 
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///stocks.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-
 db.init_app(app)
+
+
 with app.app_context():
     db.create_all()
 
@@ -16,7 +15,12 @@ with app.app_context():
 # Ajouter, Lire, Mettre à jour et Supprimer des données de stocks
 @app.route('/stocks', methods=['POST'])
 def add_stock():
-    pass
+    data = request.get_json()
+    nouvelle_stock = Stock(nom=data['nom'], prix_fermeture=data['prix_fermeture'],
+                           prix_maximum=data['prix_maximum'], prix_minimum=data['prix_minimum'])
+    db.session.add(nouvelle_stock)
+    db.session.commit()
+    return jsonify({'message': 'Livre ajouté'}), 201
 
 
 @app.route('/stocks', methods=['GET'])

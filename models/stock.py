@@ -1,5 +1,6 @@
 from models import db
 
+
 class Stock(db.Model):
     def __init__(self, nom, prix_fermeture, prix_maximum, prix_minimum):
         self.nom = nom
