@@ -22,3 +22,12 @@ class Stock(db.Model):
 
         return prix_combines / nb_jours_mois
 
+    def obtenir_prix_median(self, prix_fermeture):
+        pass
+    # Utiliser panda pour les fonctions
+
+
+
+
+
+
