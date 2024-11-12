@@ -2,8 +2,9 @@ from models import db
 
 
 class Stock(db.Model):
-    def __init__(self, nom, prix_fermeture, prix_maximum, prix_minimum):
+    def __init__(self, nom, prix_fermeture, prix_maximum, prix_minimum, symbole):
         self.nom = nom
+        self.symbole = symbole
         self.prix_fermeture = prix_fermeture
         self.prix_maximum = prix_maximum
         self.prix_minimum = prix_minimum

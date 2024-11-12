@@ -16,8 +16,8 @@ with app.app_context():
 @app.route('/stocks', methods=['POST'])
 def add_stock():
     data = request.get_json()
-    nouvelle_stock = Stock(nom=data['nom'], prix_fermeture=data['prix_fermeture'],
-                           prix_maximum=data['prix_maximum'], prix_minimum=data['prix_minimum'])
+    nouvelle_stock = Stock(nom=data['nom'], prix_fermeture=data['prix_fermeture'], prix_maximum=data['prix_maximum'],
+                           prix_minimum=data['prix_minimum'], symbole=)
     db.session.add(nouvelle_stock)
     db.session.commit()
     return jsonify({'message': 'Livre ajouté'}), 201
