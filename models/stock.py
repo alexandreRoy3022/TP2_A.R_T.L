@@ -16,12 +16,8 @@ class Stock(db.Model):
                 f"prix minimum: {self.prix_minimum}")
 
     def obtenir_moyenne_dernier_mois(self):
-        nb_jours_mois = 30
-        prix_combines = 0
-        for prix in self.prix_fermeture:
-            prix += prix_combines
+        pass
 
-        return prix_combines / nb_jours_mois
 
     def obtenir_prix_median(self, prix_fermeture):
         pass
