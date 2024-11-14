@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from models import db
 #from models.stock import Stock
 
@@ -24,6 +24,14 @@ def add_stock():
     return jsonify({'message': 'Livre ajouté'}), 201
 """
 
+@app.route("/menu_principal")
+def menu():
+    return render_template("menu_principal.html")
+
+@app.route("/ajouter")
+def ajouter():
+    return render_template("ajouter.html")
+
 @app.route('/stocks', methods=['GET'])
 def get_stocks():
     pass
@@ -46,4 +54,4 @@ def delete_stock():
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    app.run(debug=True, port=8000, host='127.0.0.1')
+    app.run(debug=True, port=7000, host='127.0.0.1')
