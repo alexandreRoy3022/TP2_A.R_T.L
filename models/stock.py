@@ -2,15 +2,17 @@ from models import db
 
 
 class Stock(db.Model):
-    def __init__(self, nom, prix_fermeture, prix_maximum, prix_minimum, symbole):
-        self.nom = nom
+    nom_entreprise = db.Column(db.String(80), unique=True, nullable=False)
+    symbole = db.Column(db.String(80), unique=True, nullable=False)
+    prix = db.Column(db.Float, nullable=False)
+
+    def __init__(self, nom_entreprise, symbole):
+        self.nom = nom_entreprise
         self.symbole = symbole
-        self.prix_fermeture = prix_fermeture
-        self.prix_maximum = prix_maximum
-        self.prix_minimum = prix_minimum
+
 
     def __repr__(self):
-        return (f"Pour la journée: {self.nom}, "
+        return (f"Action: {self.nom}, {str(self.symbole)} "
                 f"prix fermeture: {self.prix_fermeture}, "
                 f"prix maximum: {self.prix_maximum}, "
                 f"prix minimum: {self.prix_minimum}")
