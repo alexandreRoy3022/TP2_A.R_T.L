@@ -24,13 +24,16 @@ def add_stock():
     return jsonify({'message': 'Livre ajouté'}), 201
 """
 
+
 @app.route("/menu_principal")
 def menu():
     return render_template("menu_principal.html")
 
-@app.route("/ajouter")
+
+@app.route("/ajouter", methods=['Post'])
 def ajouter():
     return render_template("ajouter.html")
+
 
 @app.route('/stocks', methods=['GET'])
 def get_stocks():
