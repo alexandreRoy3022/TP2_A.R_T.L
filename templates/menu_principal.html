@@ -8,11 +8,32 @@
 
 <body>
     <h1>Bienvenu dans le menu</h1>
-        <h2>Veuillez choisir parmis les options suivantes</h2>
+        <form action="/menu_principal" method="POST">
+            <table>
+                <tr>
+                    <td>Symbole</td>
+                    <td>Date</td>
+                </tr>
+                <tr>
+                    <td>
+                        <select id="Symbole" name="Symbole">
+                            {% for symbole in symboles %}
+                            <option value="{{ symbole }}">{{ symbole }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td>
+                        <input type="date" id="date" name="date" />
+                    </td>
+                </tr>
+            </table>
+
             <button id="ajouter">Ajouter une action</button>
             <button id="Lire">Lire une action</button>
             <button id="Mettre à jour">Mettre à jour une action</button>
             <button id="Supprimer">Supprimer une action</button>
+
+        </form>
 
 
 </body>
