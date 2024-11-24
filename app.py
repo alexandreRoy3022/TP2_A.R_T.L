@@ -1,6 +1,8 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, redirect, url_for
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine, MetaData, Table, select
+from sqlalchemy.orm import sessionmaker
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///stocks.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -15,44 +17,34 @@ from models.action import Action, ActionPrix
 with app.app_context():
     db.create_all()
 
-engine = db.create_engine('sqlite:///stocks.db')
-conn = engine.connect()
-"""
-Base = declarative_base()
-Base.metadata.create_all(engine)
-meta_data = db.MetaData()
-meta_data.reflect(bind=engine)
-"""
 
-# Ajouter, Lire, Mettre à jour et Supprimer des données de stocks
+engine = create_engine('sqlite:///instance///stocks.db', echo=True)
+Session = sessionmaker(bind=engine)
+session = Session()
 
-ACTIONS = conn.exec_driver_sql("select * from tablename")
-query = db.select(ACTIONS.c.Symbole)
-symboles = engine.execute(query).fetchall()
 
-@app.route("/menu_principal")
+@app.route("/")
 def menu():
-    ACTIONS = meta_data.tables["action"]
-    query = db.select(ACTIONS.c.Symbole)
-    symboles = engine.execute(query).fetchall()
-    return render_template("menu_principal.html", symboles=symboles)
+    symboles = session.query(Action.symbole).all()
+    liste_symboles = [symbole[0] for symbole in symboles]
+    return render_template("menu_principal.html", symboles=liste_symboles)
 
 
-@app.route("/ajouter", methods=['Post'])
-def ajouter():
-    return render_template("ajouter.html")
+@app.route("/ajouter_action", methods=['GET', 'POST'])
+def ajouter_action():
+    if request.method == 'POST':
+        symbole = request.form['symbole']
+        nom_entreprise = request.form['nom_entreprise']
+        nouvelle_action = Action(symbole = symbole, nom_entreprise=nom_entreprise)
+        db.session.add(nouvelle_action)
+        db.session.commit()
+        return redirect(url_for('menu'))
+    else:
+        return render_template("ajouter_action.html")
 
-"""
-@app.route('/stocks', methods=['POST'])
-def ajouter_stock():
-    data = request.get_json()
-    new_stock = Action(nom_entreprise=data["nom"], symbole=data["symbole"], prix=data["prix"])
-    db.session.add(new_stock)
-    db.session.commit()
-    return jsonify({'message': 'Livre ajouté'}), 201 # CODE http 201 = pour "created"
-"""
-@app.route('/stocks', methods=['GET'])
-def get_stocks():
+
+@app.route('/modifier_action', methods=['GET', 'POST'])
+def modifier_action ():
     pass
 
 

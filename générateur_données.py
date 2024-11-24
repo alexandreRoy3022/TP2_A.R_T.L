@@ -1,3 +1,4 @@
+"""
 import yfinance as yf
 import sqlite3
 
@@ -16,3 +17,4 @@ for ticker in tickers:
     print("Succès!")
 
 connexion.close()
+"""

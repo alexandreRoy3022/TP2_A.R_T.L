@@ -1,9 +1,27 @@
 <!DOCTYPE html>
 <html lang="fr">
 
+
 <head>
     <meta charset="UTF-8">
     <title>Données sur les actions en bourse</title>
+    <style>
+        .button-link {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #007BFF;
+            text-decoration: none;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .button-link:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 
 <body>
@@ -28,10 +46,8 @@
                 </tr>
             </table>
 
-            <button id="ajouter">Ajouter une action</button>
-            <button id="Lire">Lire une action</button>
-            <button id="Mettre à jour">Mettre à jour une action</button>
-            <button id="Supprimer">Supprimer une action</button>
+            <a href="/ajouter_action" class="button-link">Ajouter une action</a>
+            <a href="/ajouter_action" class="button-link">Modifier une action</a>
 
         </form>
 

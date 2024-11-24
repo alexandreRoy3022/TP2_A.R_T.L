@@ -8,10 +8,10 @@ class Action(db.Model):
 
     def __init__(self, symbole, nom_entreprise):
         self.symbole = symbole
-        self.nom = nom_entreprise
+        self.nom_entreprise = nom_entreprise
 
     def __repr__(self):
-        return f"Action: {str(self.symbole)}, {self.nom} "
+        return f"Action: {str(self.symbole)}, {self.nom_entreprise} "
 
 
 class ActionPrix(db.Model):

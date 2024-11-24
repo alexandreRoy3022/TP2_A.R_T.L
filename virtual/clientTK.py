@@ -29,7 +29,7 @@ class BourseApp(TKMT.ThemedTKinterFrame):
         self.bouton_lire_stock = ttk.Button(self.frame1, text="Lire un stock", compound="top", command=lire_stock)
         self.bouton_lire_stock.place(relx=0.5, rely=0.5, anchor="center")
 
-        # valeur, nom ou symbole dans mettre à jour comme option à modifier
+        # valeur, nom_entreprise ou symbole dans mettre à jour comme option à modifier
         self.bouton_mettre_a_jour_stock = ttk.Button(self.frame1, text="Mettre à jour une stock", compound="top", command=mettre_a_jour_stock)
         self.bouton_mettre_a_jour_stock.place(relx=0.5, rely=0.6, anchor="center")
 
