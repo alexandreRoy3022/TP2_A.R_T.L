@@ -26,7 +26,7 @@
 
 <body>
     <h1>Bienvenu dans le menu</h1>
-        <form action="/menu_principal" method="POST">
+        <form action="/operation_action" method="POST">
             <table>
                 <tr>
                     <td>Symbole</td>
@@ -34,7 +34,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <select id="Symbole" name="Symbole">
+                        <select id="symbole" name="symbole">
                             {% for symbole in symboles %}
                             <option value="{{ symbole }}">{{ symbole }}</option>
                             {% endfor %}
@@ -46,8 +46,10 @@
                 </tr>
             </table>
 
-            <a href="/ajouter_action" class="button-link">Ajouter une action</a>
-            <a href="/ajouter_action" class="button-link">Modifier une action</a>
+            <!--<a href="/ajouter_action" class="button-link">Ajouter une action</a>
+            <a href="/modifier_action" class="button-link">Modifier une action</a>-->
+            <button type="submit" name="operation" value="ajouter" class="button-link">Ajouter une action</button>
+            <button type="submit" name="operation" value="modifier" class="button-link">Modifier une action</button>
 
         </form>
 
