@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+  <h1>Informations sur l'action</h1>
+
+    <form action="/ajouter_prix" method="post">
+        <label for="symbole">Symbole boursier : </label>
+        <input type="text" id="symbole" name="symbole" readonly>
+        <br>
+        <label for="date">Date : </label>
+        <input type="text" id="date" name="date" readonly>
+        <br>
+        <label for="prix_fermeture">Prix à la fermeture : </label>
+        <input type="text" id="prix_fermeture" name="prix_fermeture" required>
+        <br>
+        <label for="prix_max">Prix maximum : </label>
+        <input type="text" id="prix_max" name="prix_max" required>
+        <br>
+        <label for="prix_min">Prix minimum : </label>
+        <input type="text" id="prix_min" name="prix_min" required>
+
+        <input type="submit" value="Ajouter">
+    </form>
+</body>
+
+</html>

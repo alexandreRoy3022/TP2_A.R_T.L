@@ -21,11 +21,16 @@
         .button-link:hover {
             background-color: #0056b3;
         }
+        fieldset { width: 550px; /* Largeur fixe */
+            margin-left: 0; /* Alignement à gauche */
+            margin-right: auto; /* Facultatif, pour éviter d'autres centrages */ }
     </style>
 </head>
 
 <body>
-    <h1>Bienvenu dans le menu</h1>
+    <h1 align="center">Bienvenu dans le menu</h1>
+        <h2 align="center" style = "color:red;" >{{ message }}</h2>
+
         <form action="/operation_action" method="POST">
             <table>
                 <tr>
@@ -45,12 +50,39 @@
                     </td>
                 </tr>
             </table>
+            <fieldset style="border: 2px solid #007BFF; padding: 20px; width: 600px; margin: 20px auto;" align="left">
+                <legend style="font-weight: bold;">Action</legend>
+                <table>
+                    <tr>
+                        <td>
+                            <button type="submit" name="operation" value="ajouter" class="button-link">Ajouter une action</button>
+                        </td>
+                        <td>
+                            <button type="submit" name="operation" value="modifier" class="button-link">Modifier une action</button>
+                        </td>
+                        <td>
+                            <button type="submit" name="operation" value="supprimer" class="button-link">Supprimer une action</button>
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
 
-            <!--<a href="/ajouter_action" class="button-link">Ajouter une action</a>
-            <a href="/modifier_action" class="button-link">Modifier une action</a>-->
-            <button type="submit" name="operation" value="ajouter" class="button-link">Ajouter une action</button>
-            <button type="submit" name="operation" value="modifier" class="button-link">Modifier une action</button>
-
+            <fieldset style="border: 2px solid #007BFF; padding: 20px; width: 600px; margin: 20px auto;" align="left">
+                <legend style="font-weight: bold;">Prix de l'action</legend>
+                <table>
+                    <tr>
+                        <td>
+                            <button type="submit" name="operation" value="ajouter_prix" class="button-link">Ajouter un prix</button>
+                        </td>
+                        <td>
+                            <button type="submit" name="operation" value="modifier_prix" class="button-link">Modifier un prix</button>
+                        </td>
+                        <td>
+                            <button type="submit" name="operation" value="supprimer_prix" class="button-link">Supprimer un prix</button>
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
         </form>
 
 
