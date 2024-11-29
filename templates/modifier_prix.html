@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Modifier le prix d'une action</title>
+</head>
+
+<body>
+  <h1>Informations sur l'action</h1>
+
+    <form action="/modifier_prix?symbole={{ symbole }}&date={{ date }}" method="post">
+
+    <label for="symbole">Symbole boursier : </label>
+    <input type="text" id="symbole" name="symbole" readonly value="{{ symbole }}">
+    <br>
+
+    <label for="date">Date : </label>
+    <input type="text" id="date" name="date" readonly value="{{ date }}">
+    <br>
+
+    <label for="prix">Prix : </label>
+    <input type="text" id="prix" name="prix" required value="{{ prix }}">
+    <br>
+
+    <label for="prix_max">Prix maximum : </label>
+    <input type="text" id="prix_max" name="prix_max" required value="{{ prix_max }}">
+    <br>
+
+    <label for="prix_min">Prix minimum : </label>
+    <input type="text" id="prix_min" name="prix_min" required value="{{ prix_min }}">
+    <br>
+
+    <input type="submit" value="Modifier">
+
+  </form>
+
+
+</body>
+</html>

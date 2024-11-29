@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Supprimer les prix de l'action</title>
+</head>
+
+<body>
+  <h1>Supprimer les prix de l'action</h1>
+
+  <form action="/supprimer_prix?symbole={{ symbole }}&date={{ date }}" method="post">
+
+    <label for="symbole">Symbole boursier : </label>
+    <input type="text" id="symbole" name="symbole" readonly value="{{ symbole }}">
+    <br>
+
+    <label for="date">Date : </label>
+    <input type="text" id="date" name="date" readonly value="{{ date }}">
+    <br>
+
+    <label for="prix">Prix : </label>
+    <input type="text" id="prix" name="prix" readonly value="{{ prix }}">
+    <br>
+
+    <label for="prix_max">Prix maximum : </label>
+    <input type="text" id="prix_max" name="prix_max" readonly value="{{ prix_max }}">
+    <br>
+
+    <label for="prix_min">Prix minimum : </label>
+    <input type="text" id="prix_min" name="prix_min" readonly value="{{ prix_min }}">
+    <br>
+
+    <p>Êtes-vous sûr de vouloir supprimer ces prix ?</p>
+
+    <input type="submit" value="Supprimer">
+
+  </form>
+
+</body>
+</html>
