@@ -31,17 +31,5 @@ class ActionPrix(db.Model):
         self.prix_max = prix_max
         self.prix_min = prix_min
 
-
-
     def __repr__(self):
-        return (f"Action: {str(self.symbole)}, {self.date} "
-                f"prix: {self.prix}, "
-                f"prix maximum: {self.prix_max}, "
-                f"prix minimum: {self.prix_min}")
-
-
-
-
-
-
-
+        return f"<ActionPrix(symbole={self.symbole}, date={self.date}, prix={self.prix} "

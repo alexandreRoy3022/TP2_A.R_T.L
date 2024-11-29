@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Ajouter un prix d'action</title>
 </head>
 
 <body>
@@ -11,10 +11,10 @@
 
     <form action="/ajouter_prix" method="post">
         <label for="symbole">Symbole boursier : </label>
-        <input type="text" id="symbole" name="symbole" readonly>
+        <input type="text" id="symbole" name="symbole" required>
         <br>
         <label for="date">Date : </label>
-        <input type="text" id="date" name="date" readonly>
+        <input type="text" id="date" name="date" required>
         <br>
         <label for="prix_fermeture">Prix à la fermeture : </label>
         <input type="text" id="prix_fermeture" name="prix_fermeture" required>
