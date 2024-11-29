@@ -11,13 +11,13 @@
 
     <form action="/ajouter_prix" method="post">
         <label for="symbole">Symbole boursier : </label>
-        <input type="text" id="symbole" name="symbole" required>
+        <input type="text" id="symbole" name="symbole" readonly value="{{ symbole }}">
         <br>
         <label for="date">Date : </label>
-        <input type="text" id="date" name="date" required>
+        <input type="text" id="date" name="date" readonly value="{{ date }}">
         <br>
         <label for="prix_fermeture">Prix à la fermeture : </label>
-        <input type="text" id="prix_fermeture" name="prix_fermeture" required>
+        <input type="text" id="prix_fermeture" name="prix_fermeture" >
         <br>
         <label for="prix_max">Prix maximum : </label>
         <input type="text" id="prix_max" name="prix_max" required>
