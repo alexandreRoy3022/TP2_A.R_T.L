@@ -44,6 +44,10 @@ def operation_action():
         return render_template("supprimer_action.html", symbole=symbole, nom_entreprise=action.nom_entreprise)
     elif operation == "ajouter_prix":
         return render_template("ajouter_prix.html", symbole=symbole, date=date)
+    elif operation == "modifier_prix":
+        return render_template("modifier_prix.html", symbole=symbole, date=date)
+    elif operation == "supprimer_prix":
+        return render_template("supprimer_prix.html", symbole=symbole, date=date)
 
 
 @app.route("/ajouter_action", methods=['GET', 'POST'])
@@ -110,8 +114,8 @@ def supprimer_action():
 
 @app.route('/ajouter_prix', methods=['GET', 'POST'])
 def ajouter_prix():
-    symbole = request.args.get('symbole')
-    date = request.args.get('date')
+    symbole = request.form.get('symbole')
+    date = request.form.get('date')
     if request.method == 'POST':
         prix = request.form.get('prix')
         prix_max = request.form.get('prix_max')
@@ -157,8 +161,8 @@ def ajouter_prix():
 
 @app.route('/modifier_prix', methods=['GET', 'POST'])
 def modifier_prix():
-    symbole = request.args.get('symbole')
-    date = request.args.get('date')
+    symbole = request.form.get('symbole')
+    date = request.form.get('date')
 
     if request.method == 'POST':
 
@@ -220,10 +224,10 @@ def modifier_prix():
 
 @app.route('/supprimer_prix', methods=['GET', 'POST'])
 def supprimer_prix():
-    symbole = request.args.get('symbole')
-    date = request.args.get('date')
+    symbole = request.form.get('symbole')
+    date = request.form.get('date')
 
-    action_prix = db.session.query(Action).filter_by(symbole=symbole, date=date).first()
+    action_prix = db.session.query(ActionPrix).filter_by(symbole=symbole, date=date).first()
 
     if request.method == 'POST':
         if action_prix:
