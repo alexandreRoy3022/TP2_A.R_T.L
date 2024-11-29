@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Affichage des graphiques</h1>
+
+    <form action="/afficher_graphiques" method="post">
+        <label for="symbole">Symbole boursier : </label>
+        <input type="text" id="symbole" name="symbole" readonly value="{{ symbole }}">
+        <br>
+        <label for="date_debut">Date de debut : </label>
+        <input type="date" id="date_debut" name="date_debut">
+      <br>
+        <label for="date_fin">Date de fin : </label>
+        <input type="date" id="date_fin" name="date_fin">
+
+        <input type="submit" value="Afficher">
+      </form>
+</body>
+</html>

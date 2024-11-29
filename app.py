@@ -48,6 +48,8 @@ def operation_action():
         return render_template("modifier_prix.html", symbole=symbole, date=date)
     elif operation == "supprimer_prix":
         return render_template("supprimer_prix.html", symbole=symbole, date=date)
+    elif operation == "afficher_graphiques":
+        return render_template("afficher_graphiques.html", symbole=symbole)
 
 
 @app.route("/ajouter_action", methods=['GET', 'POST'])
@@ -240,6 +242,16 @@ def supprimer_prix():
     return render_template("supprimer_prix.html", symbole=symbole, date=date, prix=action_prix.prix,
                            prix_max=action_prix.prix_max, prix_min=action_prix.prix_min)
 
+@app.route('/afficher_graphiques', methods=['GET', 'POST'])
+def afficher_graphiques():
+    if request.method == 'GET':
+        date_debut = request.form.get('date_debut')
+        date_fin = request.form.get('date_fin')
+
+    else:
+
+
+    return render_template("afficher_graphiques.html")
 
 if __name__ == '__main__':
     with app.app_context():
