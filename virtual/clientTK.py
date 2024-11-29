@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk, messagebox, DISABLED, W
+from tkinter import ttk, messagebox, DISABLED, W, NORMAL
 import TKinterModernThemes as TKMT
 import requests
 
@@ -23,38 +23,40 @@ class BourseApp(TKMT.ThemedTKinterFrame):
         self.texte_sous_le_titre = ttk.Label(self.frame2, text="Veuillez cliquer sur l'option que vous désirez à gauche")
         self.texte_sous_le_titre.grid(column=0, row=1, columnspan=2)
 
-        self.bouton_ajouter_action = ttk.Button(self.frame1, text="Ajouter une action", compound="top", command=ajouter_action)
+        self.bouton_ajouter_action = ttk.Button(self.frame1, text="Ajouter une action", compound="top", command=self.ajouter_action)
         self.bouton_ajouter_action.place(relx=0.5, rely=0.4, anchor="center")
 
         # valeur, nom_entreprise ou symbole dans mettre à jour comme option à modifier
-        self.bouton_modifier_action = ttk.Button(self.frame1, text="Modifier une action", compound="top", command=modifier_action)
+        self.bouton_modifier_action = ttk.Button(self.frame1, text="Modifier une action", compound="top", command=self.modifier_action)
         self.bouton_modifier_action.place(relx=0.5, rely=0.5, anchor="center")
 
-        self.bouton_supprimer_action = ttk.Button(self.frame1, text="Supprimer une action", compound="top", command=supprimer_action)
+        self.bouton_supprimer_action = ttk.Button(self.frame1, text="Supprimer une action", compound="top", command=self.supprimer_action)
         self.bouton_supprimer_action.place(relx=0.5, rely=0.7, anchor="center")
 
         self.bouton_quitter = ttk.Button(self.frame1, text="Quitter", command=self.root.destroy)
         self.bouton_quitter.place(relx=0.5, rely=0.8, anchor="center")
 
-        self.bouton_ajouter_prix = ttk.Button(self.frame1, text="Ajouter le prix d'une action", command=ajouter_prix)
+        self.bouton_ajouter_prix = ttk.Button(self.frame1, text="Ajouter le prix d'une action", command=self.ajouter_prix)
         self.bouton_ajouter_prix.place(relx=0.5, rely=0.9, anchor="center")
 
-        self.bouton_modifier_prix = ttk.Button(self.frame1, text="Modifier le prix d'une action", command=modifier_prix)
+        self.bouton_modifier_prix = ttk.Button(self.frame1, text="Modifier le prix d'une action", command=self.modifier_prix)
         self.bouton_modifier_prix.place(relx=0.5, rely=1.0, anchor="center")
 
-        self.bouton_supprimer_prix = ttk.Button(self.frame1, text="Supprimer le prix d'une action", command=supprimer_prix)
+        self.bouton_supprimer_prix = ttk.Button(self.frame1, text="Supprimer le prix d'une action", command=self.supprimer_prix)
         self.bouton_supprimer_prix.place(relx=0.5, rely=1.1, anchor="center")
 
-    def ajouter_action(self):
-        self.titre.grid_forget()
-        self.texte_sous_le_titre.grid_forget()
-
+    def desactiver_boutons(self):
         self.bouton_ajouter_action.config(state=DISABLED)
         self.bouton_modifier_action.config(state=DISABLED)
         self.bouton_supprimer_action.config(state=DISABLED)
         self.bouton_ajouter_prix.config(state=DISABLED)
         self.bouton_modifier_prix.config(state=DISABLED)
         self.bouton_supprimer_prix.config(state=DISABLED)
+
+    def ajouter_action(self):
+        self.titre.grid_forget()
+        self.texte_sous_le_titre.grid_forget()
+        self.desactiver_boutons()
 
         lblTitre = ttk.Label(self.frame2, text="Veuillez répondre à chaque entrée ci-dessous")
         lblTitre.place(column=0, row=1, padx=10, pady=10, sticky=W)
@@ -79,6 +81,9 @@ class BourseApp(TKMT.ThemedTKinterFrame):
         else:
             print("Erreur")
 
+        but_retourner_accueil = ttk.Button(self.frame2, text="Retourner à la page d'accueil", command=self.retourner_page_accueil)
+        but_retourner_accueil.grid(column=1, row=4, padx=10, pady=10, sticky=W)
+
     def modifier_action(self):
         pass
 
@@ -93,6 +98,21 @@ class BourseApp(TKMT.ThemedTKinterFrame):
 
     def supprimer_prix(self):
         pass
+
+    def retourner_page_accueil(self):
+        for widget in self.frame2.winfo_children():
+            widget.grid_forget()
+
+        self.titre.grid(column=0, row=0, columnspan=2)
+        self.texte_sous_le_titre.grid(column=0, row=1, columnspan=2)
+
+        self.bouton_ajouter_action.config(state=NORMAL)
+        self.bouton_modifier_action.config(state=NORMAL)
+        self.bouton_supprimer_action.config(state=NORMAL)
+        self.bouton_ajouter_prix.config(state=NORMAL)
+        self.bouton_modifier_prix.config(state=NORMAL)
+        self.bouton_supprimer_prix.config(state=NORMAL)
+
 
 
 if __name__ == '__main__':
