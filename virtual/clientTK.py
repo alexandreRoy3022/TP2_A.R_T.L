@@ -59,14 +59,23 @@ class BourseApp(TKMT.ThemedTKinterFrame):
         self.desactiver_boutons()
 
         lblTitre = ttk.Label(self.frame2, text="Veuillez répondre à chaque entrée ci-dessous")
-        lblTitre.place(column=0, row=1, padx=10, pady=10, sticky=W)
+        lblTitre.grid(column=0, row=1, padx=10, pady=10, sticky=W)
 
-        self.input_symbole = ttk.Entry(self.frame2, "Symbole")
-        self.input_symbole.grid(column=0, row=2, padx=10, pady=10, sticky=W)
+        ttk.Label(self.frame2, text="Symbole").grid(column=0, row=2, sticky=W)
+        self.input_symbole = ttk.Entry(self.frame2)
+        self.input_symbole.grid(column=1, row=2, padx=10, pady=10, sticky=W)
 
-        self.input_nom_entreprise = ttk.Entry(self.frame2, "Nom de l'entreprise")
-        self.input_nom_entreprise.grid(column=0, row=3, padx=10, pady=10, sticky=W)
+        ttk.Label(self.frame2, text="Nom de l'entreprise").grid(column=0, row=3, sticky=W)
+        self.input_nom_entreprise = ttk.Entry(self.frame2)
+        self.input_nom_entreprise.grid(column=1, row=3, padx=10, pady=10, sticky=W)
 
+        self.bouton_soumettre_action = ttk.Button(self.frame2, text="Sauvegarder", command=self.sauvegarder_action)
+        self.bouton_soumettre_action.grid(column=1, row=4, padx=10, pady=10, sticky=W)
+
+        but_retourner_accueil = ttk.Button(self.frame2, text="Retourner à la page d'accueil", command=self.retourner_page_accueil)
+        but_retourner_accueil.grid(column=1, row=4, padx=10, pady=10, sticky=W)
+
+    def sauvegarder_action(self):
         addr_srv = "http://127.0.0.1:7000"
         symbole = self.input_symbole.get()
         nom_entreprise = self.input_nom_entreprise.get()
@@ -81,11 +90,36 @@ class BourseApp(TKMT.ThemedTKinterFrame):
         else:
             print("Erreur")
 
+    def modifier_action(self):
+        self.titre.grid_forget()
+        self.texte_sous_le_titre.grid_forget()
+        self.desactiver_boutons()
+
+        lblTitre = ttk.Label(self.frame2, text="Veuillez répondre à chaque entrée ci-dessous")
+        lblTitre.grid(column=0, row=0, padx=10, pady=10, sticky=W)
+
+        ttk.Label(self.frame2, text="Sélectionnez une action").grid(column=0, row=1, sticky=W)
+        self.choix_actions = ttk.Combobox(self.frame2, state="readonly")
+        self.choix_actions.grid(column=1, row=1, padx=10, pady=10, sticky=W)
+
+        ttk.Label(self.frame2, text="Nouveau nom de l'entreprise").grid(column=0, row=2, padx=10, pady=10, sticky=W)
+        self.input_nom_entreprise = ttk.Entry(self.frame2)
+        self.input_nom_entreprise.grid(column=1, row=2, padx=10, pady=10, sticky=W)
+
+        ttk.Label(self.frame2, text="Nouveau symbole").grid(column=0, row=3, padx=10, pady=10, sticky=W)
+        self.input_symbole = ttk.Entry(self.frame2)
+        self.input_symbole.grid(column=1, row=3, padx=10, pady=10, sticky=W)
+
+        self.bouton_soumettre_modification = ttk.Button(self.frame2, text="Modifier", command=self.soumettre_modification)
+        self.bouton_soumettre_modification.grid(column=1, row=4, padx=10, pady=10, sticky=W)
+
         but_retourner_accueil = ttk.Button(self.frame2, text="Retourner à la page d'accueil", command=self.retourner_page_accueil)
         but_retourner_accueil.grid(column=1, row=4, padx=10, pady=10, sticky=W)
 
-    def modifier_action(self):
+
+    def soumettre_modification(self):
         pass
+
 
     def supprimer_action(self):
         pass
