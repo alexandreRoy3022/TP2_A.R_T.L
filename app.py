@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask import Flask, request, jsonify, render_template, redirect, url_for
 from models import db
 from models.action import Action, ActionPrix
@@ -144,7 +146,7 @@ def ajouter_prix():
                     message="Veuillez ne pas entrer des prix négatifs"
                 )
 
-            nouveau_prix = ActionPrix(symbole=symbole, date=date, prix=prix, prix_max=prix_max, prix_min=prix_min)
+            nouveau_prix = ActionPrix(symbole=symbole, date=datetime.strptime(date, '%Y-%m-%d').date(), prix=prix, prix_max=prix_max, prix_min=prix_min)
             db.session.add(nouveau_prix)
             db.session.commit()
             return redirect(url_for('menu'))
@@ -245,9 +247,17 @@ def supprimer_prix():
 @app.route('/afficher_graphiques', methods=['GET', 'POST'])
 def afficher_graphiques():
     if request.method == 'GET':
-        date_debut = request.form.get('date_debut')
-        date_fin = request.form.get('date_fin')
+        symbole = request.form['symbole']
+        date_debut = datetime.strptime(request.form.get('date_debut'), '%Y-%m-%d').date()
+        date_fin = datetime.strptime(request.form.get('date_fin'), '%Y-%m-%d').date()
 
+        resultats = db.query(ActionPrix.symbole).filter(
+            ActionPrix.date >= date_debut,
+            ActionPrix.date <= date_fin
+        ).all()
+
+        for prix in resultats:
+            a
     else:
 
 
