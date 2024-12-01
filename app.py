@@ -19,6 +19,15 @@ with app.app_context():
 # session = Session()
 
 
+@app.route('/obtenir_actions', methods=['GET'])
+def obtenir_actions():
+    actions = Action.query.all()
+    mes_actions = []
+    for action in actions:
+        mes_actions.append({'symbole': action.symbole, 'nom entreprise': action.nom_entreprise})
+    return jsonify(mes_actions)
+
+
 def obtenir_liste_symboles():
     symboles = db.session.query(Action.symbole).all()
     liste_symboles = [symbole[0] for symbole in symboles]
@@ -82,20 +91,33 @@ def ajouter_action():
     return render_template("ajouter_action.html", symbole=symbole)
 
 
-@app.route("/modifier_action", methods=['GET', 'POST'])
-def modifier_action():
+@app.route("/modifier_action/<symbole>", methods=['GET', 'POST'])
+def modifier_action(symbole):
     if request.method == 'POST':
         symbole = request.form['symbole']
         nom_entreprise = request.form['nom_entreprise']
         action = db.session.query(Action).filter_by(symbole=symbole).first()
         if action:
             action.nom_entreprise = nom_entreprise
+            action.symbole = symbole
             db.session.commit()
             return redirect(url_for('menu'))
         else:
             print("Symbole non trouvé")
+            return render_template("modifier_action.html", symbole=symbole)
+
+    elif request.method == 'PUT':
+        data = request.get_json()
+        symbole = data.get('symbole')
+        nom_entreprise = data.get('nom_entreprise')
+
+        action = db.session.query(Action).filter_by(symbole=symbole).first()
+        if action:
+            action.nom_entreprise = nom_entreprise
+            action.symbole = symbole
+            db.session.commit()
+
     else:
-        symbole = request.form.get('Symbole')
         return render_template("modifier_action.html", symbole=symbole)
 
 
@@ -112,7 +134,7 @@ def supprimer_action():
         else:
             return render_template("menu_principal.html", symboles=obtenir_liste_symboles(), message="Symbole innexistant")
     else:
-        symbole = request.form.get('Symbole')
+        symbole = request.form.get('symbole')
         return render_template("supprimer_action.html", symbole=symbole)
 
 
