@@ -1,6 +1,8 @@
 from datetime import datetime
 
 from flask import Flask, request, jsonify, render_template, redirect, url_for
+
+from graphiques import Graphique
 from models import db
 from models.action import Action, ActionPrix
 
@@ -60,7 +62,9 @@ def operation_action():
     elif operation == "supprimer_prix":
         return render_template("supprimer_prix.html", symbole=symbole, date=date)
     elif operation == "afficher_graphiques":
-        return render_template("afficher_graphiques.html", symbole=symbole)
+        date_debut = db.session.query(ActionPrix).filter_by(symbole=symbole).order_by(db.asc(ActionPrix.date)).first().date.strftime('%Y-%m-%d')
+        date_fin = db.session.query(ActionPrix).filter_by(symbole=symbole).order_by(db.desc(ActionPrix.date)).first().date.strftime('%Y-%m-%d')
+        return render_template("afficher_graphiques.html", symbole=symbole, date_debut=date_debut, date_fin=date_fin)
 
 
 @app.route("/ajouter_action", methods=['GET', 'POST'])
@@ -265,26 +269,34 @@ def supprimer_prix():
 
     return render_template("supprimer_prix.html", symbole=symbole, date=date, prix=action_prix.prix,
                            prix_max=action_prix.prix_max, prix_min=action_prix.prix_min)
-"""
+
 @app.route('/afficher_graphiques', methods=['GET', 'POST'])
 def afficher_graphiques():
-    if request.method == 'GET':
-        symbole = request.form['symbole']
-        date_debut = datetime.strptime(request.form.get('date_debut'), '%Y-%m-%d').date()
-        date_fin = datetime.strptime(request.form.get('date_fin'), '%Y-%m-%d').date()
 
-        resultats = db.query(ActionPrix.symbole).filter(
-            ActionPrix.date >= date_debut,
-            ActionPrix.date <= date_fin
+    symbole = request.form['symbole']
+    date_debut = datetime.strptime(request.form.get('date_debut'), '%Y-%m-%d').date()
+    date_fin = datetime.strptime(request.form.get('date_fin'), '%Y-%m-%d').date()
+
+    resultats = db.session.query(ActionPrix).filter(
+        ActionPrix.symbole == symbole,
+        ActionPrix.date >= date_debut,
+        ActionPrix.date <= date_fin
         ).all()
 
-        for prix in resultats:
-            a
-    else:
+    liste_prix = []
+    liste_dates = []
+    for action in resultats:
+        liste_prix.append(action.prix)
+        liste_dates.append(action.date)
+
+    graphique = Graphique(liste_prix, liste_dates)
+
+    graphique_barre = graphique.generer_graphique("barre")
+    graphique_ligne = graphique.generer_graphique("ligne")
+
+    return render_template("afficher_graphiques.html", symbole=symbole, date_debut=date_debut, date_fin=date_fin, graphique_barre=graphique_barre, graphique_ligne=graphique_ligne )
 
 
-    return render_template("afficher_graphiques.html")
-"""
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()

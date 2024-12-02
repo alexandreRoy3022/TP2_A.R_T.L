@@ -15,7 +15,7 @@ class Action(db.Model):
 
 
 class ActionPrix(db.Model):
-    symbole = db.Column(db.String(10), unique=True,  nullable=False)
+    symbole = db.Column(db.String(10),  nullable=False)
     date = db.Column(db.DateTime, nullable=False)
     prix = db.Column(db.Float, nullable=False)
     prix_max = db.Column(db.Float, nullable=False)
