@@ -8,42 +8,48 @@ class BourseApp(TKMT.ThemedTKinterFrame):
     def __init__(self):
         super().__init__("Gestion de Stocks", "park", "light")
 
-        self.PanedWindow = ttk.PanedWindow()
+        self.PanedWindow = ttk.PanedWindow(width=800, height=600)
 
-        self.frame1 = ttk.Frame(self.PanedWindow, width=300, height=300)
-        self.frame2 = ttk.Frame(self.PanedWindow, width=300, height=300)
+        self.frame1 = ttk.Frame(self.PanedWindow, width=300, height=600, relief="sunken")
+        self.frame2 = ttk.Frame(self.PanedWindow, width=500, height=600, relief="sunken")
 
-        self.PanedWindow.add(self.frame1)
-        self.PanedWindow.add(self.frame2)
+        self.PanedWindow.add(self.frame1, weight=0)
+        self.PanedWindow.add(self.frame2, weight=0)
         self.PanedWindow.pack(fill=tk.BOTH, expand=True)
 
-        self.titre = ttk.Label(text="Gestion de stocks", font=("Helvetica", 50))
-        self.titre.grid(column=0, row=0, columnspan=2)
+        self.frame_titre = ttk.Frame(self.frame2)
+        self.frame_titre.pack(pady=10)
 
-        self.texte_sous_le_titre = ttk.Label(self.frame2, text="Veuillez cliquer sur l'option que vous désirez à gauche")
-        self.texte_sous_le_titre.grid(column=0, row=1, columnspan=2)
+        self.titre = ttk.Label(self.frame_titre, text="Gestion de stocks", font=("Helvetica", 50))
+        self.titre.grid(pady=10)
 
-        self.bouton_ajouter_action = ttk.Button(self.frame1, text="Ajouter une action", compound="top", command=self.ajouter_action)
-        self.bouton_ajouter_action.place(relx=0.5, rely=0.4, anchor="center")
+        self.texte_sous_le_titre = ttk.Label(self.frame_titre, text="Veuillez cliquer sur l'option que vous désirez à gauche")
+        self.texte_sous_le_titre.grid(pady=5)
+
+        self.frame_bouton = ttk.Frame(self.frame1)
+        self.frame_bouton.pack(fill=tk.Y, padx=10, pady=10, anchor="w")
+
+        self.bouton_ajouter_action = ttk.Button(self.frame_bouton, text="Ajouter une action", command=self.ajouter_action)
+        self.bouton_ajouter_action.pack(pady=10, fill=tk.X)
 
         # valeur, nom_entreprise ou symbole dans mettre à jour comme option à modifier
-        self.bouton_modifier_action = ttk.Button(self.frame1, text="Modifier une action", compound="top", command=self.modifier_action)
-        self.bouton_modifier_action.place(relx=0.5, rely=0.5, anchor="center")
+        self.bouton_modifier_action = ttk.Button(self.frame_bouton, text="Modifier une action", command=self.modifier_action)
+        self.bouton_modifier_action.pack(pady=10, fill=tk.X)
 
-        self.bouton_supprimer_action = ttk.Button(self.frame1, text="Supprimer une action", compound="top", command=self.supprimer_action)
-        self.bouton_supprimer_action.place(relx=0.5, rely=0.7, anchor="center")
+        self.bouton_supprimer_action = ttk.Button(self.frame_bouton, text="Supprimer une action", command=self.supprimer_action)
+        self.bouton_supprimer_action.pack(pady=10, fill=tk.X)
 
-        self.bouton_quitter = ttk.Button(self.frame1, text="Quitter", command=self.root.destroy)
-        self.bouton_quitter.place(relx=0.5, rely=0.8, anchor="center")
+        self.bouton_quitter = ttk.Button(self.frame2, text="Quitter", command=self.root.destroy)
+        self.bouton_quitter.place(relx=0.95, rely=0.05, anchor="ne")
 
-        self.bouton_ajouter_prix = ttk.Button(self.frame1, text="Ajouter le prix d'une action", command=self.ajouter_prix)
-        self.bouton_ajouter_prix.place(relx=0.5, rely=0.9, anchor="center")
+        self.bouton_ajouter_prix = ttk.Button(self.frame_bouton, text="Ajouter le prix d'une action", command=self.ajouter_prix)
+        self.bouton_ajouter_prix.pack(pady=10, fill=tk.X)
 
-        self.bouton_modifier_prix = ttk.Button(self.frame1, text="Modifier le prix d'une action", command=self.modifier_prix)
-        self.bouton_modifier_prix.place(relx=0.5, rely=1.0, anchor="center")
+        self.bouton_modifier_prix = ttk.Button(self.frame_bouton, text="Modifier le prix d'une action", command=self.modifier_prix)
+        self.bouton_modifier_prix.pack(pady=10, fill=tk.X)
 
-        self.bouton_supprimer_prix = ttk.Button(self.frame1, text="Supprimer le prix d'une action", command=self.supprimer_prix)
-        self.bouton_supprimer_prix.place(relx=0.5, rely=1.1, anchor="center")
+        self.bouton_supprimer_prix = ttk.Button(self.frame_bouton, text="Supprimer le prix d'une action", command=self.supprimer_prix)
+        self.bouton_supprimer_prix.pack(pady=10, fill=tk.X)
 
 
     def desactiver_boutons(self):
