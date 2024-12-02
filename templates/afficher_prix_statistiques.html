@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+    .table-container {
+        width: 100%;           /* Largeur du conteneur */
+        max-height: 300px;     /* Hauteur maximale du conteneur */
+        overflow: auto;        /* Ajoute une barre de défilement si nécessaire */
+        border: 1px solid #ccc; /* Bordure pour le conteneur */
+    }
+
+    table {
+        width: 100%;           /* Remplir la largeur du conteneur */
+        border-collapse: collapse; /* Fusionner les bordures des cellules */
+    }
+
+    th, td {
+        border: 1px solid #ddd; /* Bordure des cellules */
+        padding: 8px;           /* Espacement interne des cellules */
+        text-align: left;       /* Alignement du texte */
+    }
+
+    th {
+        background-color: #f2f2f2; /* Couleur de fond pour l'entête */
+    }
+    </style>
+</head>
+
+<body>
+<h1>Affichage des prix et des statistiques</h1>
+    <form action="/afficher_prix_statistiques" method="post">
+        <label for="symbole">Symbole boursier : </label>
+        <input type="text" id="symbole" name="symbole" readonly value="{{ symbole }}">
+
+        <label for="moyenne">Moyenne du prix : </label>
+        <input type="text" id="moyenne" name="moyenne" readonly value="{{ moyenne }}">
+
+        <label for="mediane">Mediane du prix : </label>
+        <input type="text" id="mediane" name="mediane" readonly value="{{ mediane }}">
+        <br>
+
+        <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Prix</th>
+                    <th>Prix maximum</th>
+                    <th>Prix minimum</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Lignes de tableau avec des données -->
+                {% for info_prix in action_prix %}
+                    <tr>
+                        <td> {{ info_prix.date.strftime('%Y-%m-%d') }} </td>
+                        <td> {{ info_prix.prix }} </td>
+                        <td> {{ info_prix.prix_max }} </td>
+                        <td> {{ info_prix.prix_min }} </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    </form>
+</body>
+</html>

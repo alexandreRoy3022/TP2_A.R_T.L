@@ -1,10 +1,12 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from flask import Flask, request, jsonify, render_template, redirect, url_for
 
 from graphiques import Graphique
 from models import db
 from models.action import Action, ActionPrix
+
+import numpy as np
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///stocks.db'
@@ -62,9 +64,19 @@ def operation_action():
     elif operation == "supprimer_prix":
         return render_template("supprimer_prix.html", symbole=symbole, date=date)
     elif operation == "afficher_graphiques":
-        date_debut = db.session.query(ActionPrix).filter_by(symbole=symbole).order_by(db.asc(ActionPrix.date)).first().date.strftime('%Y-%m-%d')
+        date_debut = (db.session.query(ActionPrix).filter_by(symbole=symbole).order_by(db.desc(ActionPrix.date)).first().date - timedelta(days=30)).strftime('%Y-%m-%d')
         date_fin = db.session.query(ActionPrix).filter_by(symbole=symbole).order_by(db.desc(ActionPrix.date)).first().date.strftime('%Y-%m-%d')
-        return render_template("afficher_graphiques.html", symbole=symbole, date_debut=date_debut, date_fin=date_fin)
+        graphique_barre, graphique_ligne = generer_graphique(symbole, date_debut, date_fin)
+
+        return render_template("afficher_graphiques.html", symbole=symbole, date_debut=date_debut, date_fin=date_fin, graphique_barre=graphique_barre, graphique_ligne=graphique_ligne)
+    elif operation == "afficher_prix_statistiques":
+        liste_prix = []
+        action_prix = db.session.query(ActionPrix).filter_by(symbole=symbole).order_by(db.asc(ActionPrix.date))
+        for info_prix in action_prix:
+            liste_prix.append(info_prix.prix)
+        moyenne = np.mean(liste_prix)
+        mediane = np.median(liste_prix)
+        return render_template("afficher_prix_statistiques.html", symbole=symbole, moyenne=moyenne, mediane=mediane, action_prix=action_prix)
 
 
 @app.route("/ajouter_action", methods=['GET', 'POST'])
@@ -270,13 +282,7 @@ def supprimer_prix():
     return render_template("supprimer_prix.html", symbole=symbole, date=date, prix=action_prix.prix,
                            prix_max=action_prix.prix_max, prix_min=action_prix.prix_min)
 
-@app.route('/afficher_graphiques', methods=['GET', 'POST'])
-def afficher_graphiques():
-
-    symbole = request.form['symbole']
-    date_debut = datetime.strptime(request.form.get('date_debut'), '%Y-%m-%d').date()
-    date_fin = datetime.strptime(request.form.get('date_fin'), '%Y-%m-%d').date()
-
+def generer_graphique(symbole, date_debut, date_fin):
     resultats = db.session.query(ActionPrix).filter(
         ActionPrix.symbole == symbole,
         ActionPrix.date >= date_debut,
@@ -293,6 +299,17 @@ def afficher_graphiques():
 
     graphique_barre = graphique.generer_graphique("barre")
     graphique_ligne = graphique.generer_graphique("ligne")
+
+    return graphique_barre, graphique_ligne
+
+@app.route('/afficher_graphiques', methods=['GET', 'POST'])
+def afficher_graphiques():
+
+    symbole = request.form['symbole']
+    date_debut = datetime.strptime(request.form.get('date_debut'), '%Y-%m-%d').date()
+    date_fin = datetime.strptime(request.form.get('date_fin'), '%Y-%m-%d').date()
+
+    graphique_barre, graphique_ligne = generer_graphique(symbole, date_debut, date_fin)
 
     return render_template("afficher_graphiques.html", symbole=symbole, date_debut=date_debut, date_fin=date_fin, graphique_barre=graphique_barre, graphique_ligne=graphique_ligne )
 
