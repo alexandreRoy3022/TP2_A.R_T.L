@@ -8,42 +8,48 @@ class BourseApp(TKMT.ThemedTKinterFrame):
     def __init__(self):
         super().__init__("Gestion de Stocks", "park", "light")
 
-        self.PanedWindow = ttk.PanedWindow()
+        self.PanedWindow = ttk.PanedWindow(width=800, height=600)
 
-        self.frame1 = ttk.Frame(self.PanedWindow, width=300, height=300)
-        self.frame2 = ttk.Frame(self.PanedWindow, width=300, height=300)
+        self.frame1 = ttk.Frame(self.PanedWindow, width=300, height=600, relief="sunken")
+        self.frame2 = ttk.Frame(self.PanedWindow, width=500, height=600, relief="sunken")
 
-        self.PanedWindow.add(self.frame1)
-        self.PanedWindow.add(self.frame2)
-        self.PanedWindow.pack(fill=tk.BOTH, expand=True)
+        self.PanedWindow.add(self.frame1, weight=0)
+        self.PanedWindow.add(self.frame2, weight=0)
+        self.PanedWindow.grid(sticky="nsew")
 
-        self.titre = ttk.Label(text="Gestion de stocks", font=("Helvetica", 50))
-        self.titre.grid(column=0, row=0, columnspan=2)
+        self.frame_titre = ttk.Frame(self.frame2)
+        self.frame_titre.grid(pady=10)
 
-        self.texte_sous_le_titre = ttk.Label(self.frame2, text="Veuillez cliquer sur l'option que vous désirez à gauche")
-        self.texte_sous_le_titre.grid(column=0, row=1, columnspan=2)
+        self.titre = ttk.Label(self.frame_titre, text="Gestion de stocks", font=("Helvetica", 50))
+        self.titre.grid(pady=10)
 
-        self.bouton_ajouter_action = ttk.Button(self.frame1, text="Ajouter une action", compound="top", command=self.ajouter_action)
-        self.bouton_ajouter_action.place(relx=0.5, rely=0.4, anchor="center")
+        self.texte_sous_le_titre = ttk.Label(self.frame_titre, text="Veuillez cliquer sur l'option que vous désirez à gauche")
+        self.texte_sous_le_titre.grid(pady=5)
+
+        self.frame_bouton = ttk.Frame(self.frame1)
+        self.frame_bouton.grid(sticky="nsew", padx=10, pady=10)
+
+        self.bouton_ajouter_action = ttk.Button(self.frame_bouton, text="Ajouter une action", command=self.ajouter_action)
+        self.bouton_ajouter_action.grid(pady=10, sticky="ew")
 
         # valeur, nom_entreprise ou symbole dans mettre à jour comme option à modifier
-        self.bouton_modifier_action = ttk.Button(self.frame1, text="Modifier une action", compound="top", command=self.modifier_action)
-        self.bouton_modifier_action.place(relx=0.5, rely=0.5, anchor="center")
+        self.bouton_modifier_action = ttk.Button(self.frame_bouton, text="Modifier une action", command=self.modifier_action)
+        self.bouton_modifier_action.grid(pady=10, sticky="ew")
 
-        self.bouton_supprimer_action = ttk.Button(self.frame1, text="Supprimer une action", compound="top", command=self.supprimer_action)
-        self.bouton_supprimer_action.place(relx=0.5, rely=0.7, anchor="center")
+        self.bouton_supprimer_action = ttk.Button(self.frame_bouton, text="Supprimer une action", command=self.supprimer_action)
+        self.bouton_supprimer_action.grid(pady=10, sticky="ew")
 
-        self.bouton_quitter = ttk.Button(self.frame1, text="Quitter", command=self.root.destroy)
-        self.bouton_quitter.place(relx=0.5, rely=0.8, anchor="center")
+        self.bouton_quitter = ttk.Button(self.frame2, text="Quitter", command=self.root.destroy)
+        self.bouton_quitter.grid(sticky="ew")
 
-        self.bouton_ajouter_prix = ttk.Button(self.frame1, text="Ajouter le prix d'une action", command=self.ajouter_prix)
-        self.bouton_ajouter_prix.place(relx=0.5, rely=0.9, anchor="center")
+        self.bouton_ajouter_prix = ttk.Button(self.frame_bouton, text="Ajouter le prix d'une action", command=self.ajouter_prix)
+        self.bouton_ajouter_prix.grid(pady=10, sticky="ew")
 
-        self.bouton_modifier_prix = ttk.Button(self.frame1, text="Modifier le prix d'une action", command=self.modifier_prix)
-        self.bouton_modifier_prix.place(relx=0.5, rely=1.0, anchor="center")
+        self.bouton_modifier_prix = ttk.Button(self.frame_bouton, text="Modifier le prix d'une action", command=self.modifier_prix)
+        self.bouton_modifier_prix.grid(pady=10, sticky="ew")
 
-        self.bouton_supprimer_prix = ttk.Button(self.frame1, text="Supprimer le prix d'une action", command=self.supprimer_prix)
-        self.bouton_supprimer_prix.place(relx=0.5, rely=1.1, anchor="center")
+        self.bouton_supprimer_prix = ttk.Button(self.frame_bouton, text="Supprimer le prix d'une action", command=self.supprimer_prix)
+        self.bouton_supprimer_prix.grid(pady=10, sticky="ew")
 
 
     def desactiver_boutons(self):
@@ -63,18 +69,18 @@ class BourseApp(TKMT.ThemedTKinterFrame):
         lblTitre.grid(column=0, row=1, padx=10, pady=10, sticky=W)
 
         ttk.Label(self.frame2, text="Symbole").grid(column=0, row=2, sticky=W)
-        input_symbole = ttk.Entry(self.frame2)
-        input_symbole.grid(column=1, row=2, padx=10, pady=10, sticky=W)
+        self.input_symbole = ttk.Entry(self.frame2)
+        self.input_symbole.grid(column=1, row=2, padx=10, pady=10, sticky=W)
 
         ttk.Label(self.frame2, text="Nom de l'entreprise").grid(column=0, row=3, sticky=W)
-        input_nom_entreprise = ttk.Entry(self.frame2)
-        input_nom_entreprise.grid(column=1, row=3, padx=10, pady=10, sticky=W)
+        self.input_nom_entreprise = ttk.Entry(self.frame2)
+        self.input_nom_entreprise.grid(column=1, row=3, padx=10, pady=10, sticky=W)
 
-        bouton_soumettre_action = ttk.Button(self.frame2, text="Sauvegarder", command=self.sauvegarder_action)
-        bouton_soumettre_action.grid(column=1, row=4, padx=10, pady=10, sticky=W)
+        self.bouton_soumettre_action = ttk.Button(self.frame2, text="Sauvegarder", command=self.sauvegarder_action)
+        self.bouton_soumettre_action.grid(column=1, row=4, padx=10, pady=10, sticky=W)
 
-        but_retourner_accueil = ttk.Button(self.frame2, text="Retourner à la page d'accueil", command=self.retourner_page_accueil)
-        but_retourner_accueil.grid(column=1, row=5, padx=10, pady=10, sticky=W)
+        self.but_retourner_accueil = ttk.Button(self.frame2, text="Retourner à la page d'accueil", command=self.retourner_page_accueil)
+        self.but_retourner_accueil.grid(column=1, row=5, padx=10, pady=10, sticky=W)
 
     def sauvegarder_action(self):
         addr_srv = "http://127.0.0.1:7000"
@@ -178,6 +184,7 @@ class BourseApp(TKMT.ThemedTKinterFrame):
 
             ttk.Label(self.frame2, text="Sélectionnez une action à supprimer").grid(column=0, row=1, sticky=W)
             self.choix_actions = ttk.Combobox(self.frame2, state="readonly")
+            self.choix_actions['values'] = self.liste_actions
             self.choix_actions.grid(column=1, row=1, padx=10, pady=10, sticky=W)
 
 
@@ -215,7 +222,7 @@ class BourseApp(TKMT.ThemedTKinterFrame):
         self.titre.grid_forget()
         self.texte_sous_le_titre.grid_forget()
         self.desactiver_boutons()
-
+        symboles = self.obtenir_symboles()
         lblTitre = ttk.Label(self.frame2, text="Veuillez répondre à chaque entrée ci-dessous")
         lblTitre.grid(column=0, row=0, padx=10, pady=10, sticky=W)
 
@@ -226,7 +233,7 @@ class BourseApp(TKMT.ThemedTKinterFrame):
             self.liste_actions = {f"{actions['symbole']} - {actions['nom de l\'entreprise']}": action for action in actions}
 
             ttk.Label(self.frame2, text="Sélectionnez une action").grid(column=0, row=1, sticky=W)
-            self.choix_actions = ttk.Combobox(self.frame2, state="readonly")
+            self.choix_actions = ttk.Combobox(self.frame2, values=symboles, state="readonly")
             self.choix_actions.grid(column=1, row=1, padx=10, pady=10, sticky=W)
 
         ttk.Label(self.frame2, text="Date (MM-DD-YYYY").grid(column=0, row=2, sticky=W)
@@ -245,25 +252,25 @@ class BourseApp(TKMT.ThemedTKinterFrame):
         self.input_prix_minimum = ttk.Entry(self.frame2)
         self.input_prix_minimum.grid(column=1, row=5, padx=10, pady=10, sticky=W)
 
-        ttk.Label(self.frame2, text="Prix minimum").grid(column=0, row=6, sticky=W)
-        self.input_date = ttk.Entry(self.frame2)
-        self.input_date.grid(column=1, row=6, padx=10, pady=10, sticky=W)
-
         self.bouton_soumettre_infos = ttk.Button(self.frame2, text="Supprimer", command=self.soumettre_infos)
-        self.bouton_soumettre_infos.grid(column=1, row=7, padx=10, pady=10, sticky=W)
+        self.bouton_soumettre_infos.grid(column=1, row=6, padx=10, pady=10, sticky=W)
 
         self.but_retourner_accueil = ttk.Button(self.frame2, text="Retourner à la page d'accueil",
                                                 command=self.retourner_page_accueil)
-        self.but_retourner_accueil.grid(column=1, row=8, padx=10, pady=10, sticky=W)
+        self.but_retourner_accueil.grid(column=1, row=7, padx=10, pady=10, sticky=W)
 
     def soumettre_infos(self):
-        action = self.choix_actions.get()
+        symbole = self.choix_actions.get()
 
-        symbole = self.liste_actions.get(action)
+
         prix = self.input_prix.get()
         prix_maximum = self.input_prix_maximum.get()
         prix_minimum = self.input_prix_minimum.get()
         date = self.input_date.get()
+
+        if not (symbole and prix and prix_maximum and prix_minimum and date):
+            messagebox.showerror("Erreur", "Veuillez remplir toutes les cases")
+            return
 
         addr_srv = "http://127.0.0.1:7000/ajouter_prix"
         infos = {"symbole": symbole, "date": date, "prix": prix, "prix_max": prix_maximum, "prix_min": prix_minimum}
@@ -275,17 +282,114 @@ class BourseApp(TKMT.ThemedTKinterFrame):
 
 
     def modifier_prix(self):
-        pass
+        self.titre.grid_forget()
+        self.texte_sous_le_titre.grid_forget()
+        self.desactiver_boutons()
+
+        lblTitre = ttk.Label(self.frame2, text="Veuillez répondre à chaque entrée ci-dessous")
+        lblTitre.grid(column=0, row=0, padx=10, pady=10, sticky=W)
+
+        symboles = self.obtenir_symboles()
+
+        ttk.Label(self.frame2, text="Sélectionnez une action à modifier").grid(column=0, row=1, sticky=W, padx=10, pady=5)
+        self.choix_symboles = ttk.Combobox(self.frame2, values=symboles, state="readonly")
+        self.choix_symboles.grid(column=1, row=1, padx=10, pady=5, sticky=W)
+
+        ttk.Label(self.frame2, text="Date (MM-DD-YYYY").grid(column=0, row=2, sticky=W, padx=10, pady=5)
+        self.input_date = ttk.Entry(self.frame2)
+        self.input_date.grid(column=1, row=2, padx=10, pady=5, sticky=W)
+
+        ttk.Label(self.frame2, text="Prix de l'action").grid(column=0, row=3, sticky=W, padx=10, pady=5)
+        self.input_prix = ttk.Entry(self.frame2)
+        self.input_prix.grid(column=1, row=3, padx=5, pady=10, sticky=W)
+
+        ttk.Label(self.frame2, text="Prix maximum").grid(column=0, row=4, sticky=W, padx=10, pady=5)
+        self.input_prix_maximum = ttk.Entry(self.frame2)
+        self.input_prix_maximum.grid(column=1, row=4, padx=10, pady=5, sticky=W)
+
+        ttk.Label(self.frame2, text="Prix minimmum").grid(column=0, row=5, sticky=W, padx=10, pady=5)
+        self.input_prix_minimum = ttk.Entry(self.frame2)
+        self.input_prix_minimum.grid(column=1, row=5, padx=10, pady=5, sticky=W)
+
+        self.bouton_soumettre_prix = ttk.Button(self.frame2, text="Supprimer", command=self.soumettre_prix)
+        self.bouton_soumettre_prix.grid(column=1, row=6, padx=10, pady=10, sticky=W)
+
+        self.but_retourner_accueil = ttk.Button(self.frame2, text="Retourner à la page d'accueil",
+                                                command=self.retourner_page_accueil)
+        self.but_retourner_accueil.grid(column=1, row=7, padx=10, pady=10, sticky=W)
+
+    def obtenir_symboles(self):
+        addr_srv = "http://127.0.0.1:7000"
+        response = requests.get(f"{addr_srv}/obtenir_actions")
+        if response.status_code == 200:
+            actions = response.json()
+            return [action["symbole"] for action in actions]
+        else:
+            messagebox.showerror("Erreur", "Impossible de faire l'action choisie")
+
+    def soumettre_prix(self):
+        symbole = self.choix_symboles.get()
+        prix = self.input_prix.get()
+        prix_maximum = self.input_prix_maximum.get()
+        prix_minimum = self.input_prix_minimum.get()
+        date = self.input_date.get()
+
+        if not (symbole and prix and prix_maximum and prix_minimum and date):
+            messagebox.showerror("Erreur", "Veuillez remplir toutes les cases")
+            return
+
+        addr_srv = "http://127.0.0.1:7000"
+        response = requests.put(f"{addr_srv}/modifier_prix", json={"symbole": symbole, "prix": prix, "prix_min": prix_minimum, "prix_max": prix_maximum, "date": date})
+        if response.status_code == 200:
+            messagebox.showinfo("Succès", "Succès!")
+
 
     def supprimer_prix(self):
-        pass
+        self.titre.grid_forget()
+        self.texte_sous_le_titre.grid_forget()
+        self.desactiver_boutons()
+
+        lblTitre = ttk.Label(self.frame2, text="Veuillez répondre à chaque entrée ci-dessous")
+        lblTitre.grid(column=0, row=0, padx=10, pady=10, sticky=W)
+
+        symboles = self.obtenir_symboles()
+
+        ttk.Label(self.frame2, text="Sélectionnez une action à supprimer").grid(column=0, row=1, sticky=W, padx=10,
+                                                                                pady=5)
+        self.choix_symboles = ttk.Combobox(self.frame2, values=symboles, state="readonly")
+        self.choix_symboles.grid(column=1, row=1, padx=10, pady=5, sticky=W)
+
+        ttk.Label(self.frame2, text="Date (MM-DD-YYYY").grid(column=0, row=2, sticky=W, padx=10, pady=5)
+        self.input_date = ttk.Entry(self.frame2)
+        self.input_date.grid(column=1, row=2, padx=10, pady=5, sticky=W)
+
+        self.bouton_soumettre_suppression_prix = ttk.Button(self.frame2, text="Supprimer", command=self.soumettre_suppression_prix)
+        self.bouton_soumettre_suppression_prix.grid(column=1, row=3, padx=10, pady=10, sticky=W)
+
+        self.but_retourner_accueil = ttk.Button(self.frame2, text="Retourner à la page d'accueil",
+                                                command=self.retourner_page_accueil)
+        self.but_retourner_accueil.grid(column=1, row=4, padx=10, pady=10, sticky=W)
+
+    def soumettre_suppression_prix(self):
+        symbole = self.choix_symboles.get()
+        date = self.input_date.get()
+
+        if not symbole or not date:
+            messagebox.showerror("Erreur", "Veuillez remplir toutes les cases")
+            return
+
+        addr_srv = "http://127.0.0.1:7000"
+        response = requests.delete(f"{addr_srv}/supprimer_prix", json={"symbole": symbole, "date": date})
+        if response.status_code == 200:
+            messagebox.showinfo("Succès", "Prix supprimé")
 
     def retourner_page_accueil(self):
         for widget in self.frame2.winfo_children():
             widget.grid_forget()
 
-        self.titre.grid(column=0, row=0, columnspan=2)
-        self.texte_sous_le_titre.grid(column=0, row=1, columnspan=2)
+        self.frame_bouton.grid(sticky="nsew", padx=10, pady=10)
+        self.titre.grid(pady=10)
+        self.texte_sous_le_titre.grid(padx=5)
 
         self.bouton_ajouter_action.config(state=NORMAL)
         self.bouton_modifier_action.config(state=NORMAL)

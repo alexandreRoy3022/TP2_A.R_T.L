@@ -107,7 +107,7 @@ def ajouter_action():
     return render_template("ajouter_action.html", symbole=symbole)
 
 
-@app.route("/modifier_action/<symbole>", methods=['GET', 'POST'])
+@app.route("/modifier_action/<symbole>", methods=['GET', 'POST', 'PUT'])
 def modifier_action(symbole):
     if request.method == 'POST':
         symbole = request.form['symbole']
@@ -137,7 +137,7 @@ def modifier_action(symbole):
         return render_template("modifier_action.html", symbole=symbole)
 
 
-@app.route("/supprimer_action", methods=['GET', 'POST'])
+@app.route("/supprimer_action", methods=['GET', 'POST', 'DELETE'])
 def supprimer_action():
     if request.method == 'POST':
         symbole = request.form['symbole']
@@ -149,6 +149,16 @@ def supprimer_action():
             return redirect(url_for('menu'))
         else:
             return render_template("menu_principal.html", symboles=obtenir_liste_symboles(), message="Symbole innexistant")
+
+    elif request.method == 'DELETE':
+        data = request.get_json()
+        symbole = data.get('symbole')
+        action = db.session.query(ActionPrix).filter_by(symbole=symbole).first()
+        if action:
+            db.session.delete(action)
+            db.session.commit()
+            return redirect(url_for('menu'))
+
     else:
         symbole = request.form.get('symbole')
         return render_template("supprimer_action.html", symbole=symbole)
@@ -163,7 +173,7 @@ def ajouter_prix():
         prix_max = request.form.get('prix_max')
         prix_min = request.form.get('prix_min')
 
-        if not prix or not prix_max or not prix_min:
+        if not prix or not prix_max or not prix_min or not date:
             return render_template(
                 "ajouter_prix.html",
                 symbole=symbole,
@@ -201,7 +211,7 @@ def ajouter_prix():
 
 
 
-@app.route('/modifier_prix', methods=['GET', 'POST'])
+@app.route('/modifier_prix', methods=['GET', 'POST', 'PUT'])
 def modifier_prix():
     symbole = request.form.get('symbole')
     date = request.form.get('date')
@@ -255,16 +265,30 @@ def modifier_prix():
                 message="Veuillez entrer que des valeurs numériques"
             )
 
-    action_prix = db.session.query(ActionPrix).filter_by(symbole=symbole, date=date).first()
-    if action_prix:
-        return render_template("modifier_prix.html", symbole=symbole, date=date, prix=action_prix.prix,
-                               prix_max=action_prix.prix_max, prix_min=action_prix.prix_min)
+    elif request.method == 'PUT':
+        data = request.get_json()
+        symbole = data.get('symbole')
+        prix = data.get('prix')
+        prix_max = data.get('prix_max')
+        prix_min = data.get('prix_min')
+        date = data.get('date')
+
+        action_prix = db.session.query(ActionPrix).filter_by(symbole=symbole).first()
+        if action_prix:
+            action_prix.prix = prix
+            action_prix.prix_min = prix_min
+            action_prix.prix_max = prix_max
+            action_prix.date = date
+            db.session.commit()
+            return redirect(url_for('menu'))
+
     else:
         return render_template("modifier_prix.html", symbole=symbole, date=date,
                                message="Aucun prix trouvé à cette date")
 
 
-@app.route('/supprimer_prix', methods=['GET', 'POST'])
+
+@app.route('/supprimer_prix', methods=['GET', 'POST', 'DELETE'])
 def supprimer_prix():
     symbole = request.form.get('symbole')
     date = request.form.get('date')
@@ -279,8 +303,17 @@ def supprimer_prix():
         else:
             return render_template("supprimer_prix.html", symboles=symbole, date=date, message="Prix non trouvé")
 
+    elif request.method == 'DELETE':
+        data = request.get_json()
+        symbole = data.get('symbole')
+        action_prix = db.session.query(ActionPrix).filter_by(symbole=symbole).first()
+        db.session.delete(action_prix)
+        db.session.commit()
+        return redirect(url_for('menu'))
+
     return render_template("supprimer_prix.html", symbole=symbole, date=date, prix=action_prix.prix,
                            prix_max=action_prix.prix_max, prix_min=action_prix.prix_min)
+
 
 def generer_graphique(symbole, date_debut, date_fin):
     resultats = db.session.query(ActionPrix).filter(
@@ -301,6 +334,7 @@ def generer_graphique(symbole, date_debut, date_fin):
     graphique_ligne = graphique.generer_graphique("ligne")
 
     return graphique_barre, graphique_ligne
+
 
 @app.route('/afficher_graphiques', methods=['GET', 'POST'])
 def afficher_graphiques():
