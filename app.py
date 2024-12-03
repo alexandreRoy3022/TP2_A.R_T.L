@@ -173,7 +173,7 @@ def ajouter_prix():
         prix_max = request.form.get('prix_max')
         prix_min = request.form.get('prix_min')
 
-        if not prix or not prix_max or not prix_min:
+        if not prix or not prix_max or not prix_min or not date:
             return render_template(
                 "ajouter_prix.html",
                 symbole=symbole,

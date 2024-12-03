@@ -15,10 +15,10 @@ class BourseApp(TKMT.ThemedTKinterFrame):
 
         self.PanedWindow.add(self.frame1, weight=0)
         self.PanedWindow.add(self.frame2, weight=0)
-        self.PanedWindow.pack(fill=tk.BOTH, expand=True)
+        self.PanedWindow.grid(sticky="nsew")
 
         self.frame_titre = ttk.Frame(self.frame2)
-        self.frame_titre.pack(pady=10)
+        self.frame_titre.grid(pady=10)
 
         self.titre = ttk.Label(self.frame_titre, text="Gestion de stocks", font=("Helvetica", 50))
         self.titre.grid(pady=10)
@@ -27,29 +27,29 @@ class BourseApp(TKMT.ThemedTKinterFrame):
         self.texte_sous_le_titre.grid(pady=5)
 
         self.frame_bouton = ttk.Frame(self.frame1)
-        self.frame_bouton.pack(fill=tk.Y, padx=10, pady=10, anchor="w")
+        self.frame_bouton.grid(sticky="nsew", padx=10, pady=10)
 
         self.bouton_ajouter_action = ttk.Button(self.frame_bouton, text="Ajouter une action", command=self.ajouter_action)
-        self.bouton_ajouter_action.pack(pady=10, fill=tk.X)
+        self.bouton_ajouter_action.grid(pady=10, sticky="ew")
 
         # valeur, nom_entreprise ou symbole dans mettre à jour comme option à modifier
         self.bouton_modifier_action = ttk.Button(self.frame_bouton, text="Modifier une action", command=self.modifier_action)
-        self.bouton_modifier_action.pack(pady=10, fill=tk.X)
+        self.bouton_modifier_action.grid(pady=10, sticky="ew")
 
         self.bouton_supprimer_action = ttk.Button(self.frame_bouton, text="Supprimer une action", command=self.supprimer_action)
-        self.bouton_supprimer_action.pack(pady=10, fill=tk.X)
+        self.bouton_supprimer_action.grid(pady=10, sticky="ew")
 
         self.bouton_quitter = ttk.Button(self.frame2, text="Quitter", command=self.root.destroy)
-        self.bouton_quitter.place(relx=0.95, rely=0.05, anchor="ne")
+        self.bouton_quitter.grid(sticky="ew")
 
         self.bouton_ajouter_prix = ttk.Button(self.frame_bouton, text="Ajouter le prix d'une action", command=self.ajouter_prix)
-        self.bouton_ajouter_prix.pack(pady=10, fill=tk.X)
+        self.bouton_ajouter_prix.grid(pady=10, sticky="ew")
 
         self.bouton_modifier_prix = ttk.Button(self.frame_bouton, text="Modifier le prix d'une action", command=self.modifier_prix)
-        self.bouton_modifier_prix.pack(pady=10, fill=tk.X)
+        self.bouton_modifier_prix.grid(pady=10, sticky="ew")
 
         self.bouton_supprimer_prix = ttk.Button(self.frame_bouton, text="Supprimer le prix d'une action", command=self.supprimer_prix)
-        self.bouton_supprimer_prix.pack(pady=10, fill=tk.X)
+        self.bouton_supprimer_prix.grid(pady=10, sticky="ew")
 
 
     def desactiver_boutons(self):
@@ -69,18 +69,18 @@ class BourseApp(TKMT.ThemedTKinterFrame):
         lblTitre.grid(column=0, row=1, padx=10, pady=10, sticky=W)
 
         ttk.Label(self.frame2, text="Symbole").grid(column=0, row=2, sticky=W)
-        input_symbole = ttk.Entry(self.frame2)
-        input_symbole.grid(column=1, row=2, padx=10, pady=10, sticky=W)
+        self.input_symbole = ttk.Entry(self.frame2)
+        self.input_symbole.grid(column=1, row=2, padx=10, pady=10, sticky=W)
 
         ttk.Label(self.frame2, text="Nom de l'entreprise").grid(column=0, row=3, sticky=W)
-        input_nom_entreprise = ttk.Entry(self.frame2)
-        input_nom_entreprise.grid(column=1, row=3, padx=10, pady=10, sticky=W)
+        self.input_nom_entreprise = ttk.Entry(self.frame2)
+        self.input_nom_entreprise.grid(column=1, row=3, padx=10, pady=10, sticky=W)
 
-        bouton_soumettre_action = ttk.Button(self.frame2, text="Sauvegarder", command=self.sauvegarder_action)
-        bouton_soumettre_action.grid(column=1, row=4, padx=10, pady=10, sticky=W)
+        self.bouton_soumettre_action = ttk.Button(self.frame2, text="Sauvegarder", command=self.sauvegarder_action)
+        self.bouton_soumettre_action.grid(column=1, row=4, padx=10, pady=10, sticky=W)
 
-        but_retourner_accueil = ttk.Button(self.frame2, text="Retourner à la page d'accueil", command=self.retourner_page_accueil)
-        but_retourner_accueil.grid(column=1, row=5, padx=10, pady=10, sticky=W)
+        self.but_retourner_accueil = ttk.Button(self.frame2, text="Retourner à la page d'accueil", command=self.retourner_page_accueil)
+        self.but_retourner_accueil.grid(column=1, row=5, padx=10, pady=10, sticky=W)
 
     def sauvegarder_action(self):
         addr_srv = "http://127.0.0.1:7000"
@@ -387,8 +387,9 @@ class BourseApp(TKMT.ThemedTKinterFrame):
         for widget in self.frame2.winfo_children():
             widget.grid_forget()
 
-        self.titre.grid(column=0, row=0, columnspan=2)
-        self.texte_sous_le_titre.grid(column=0, row=1, columnspan=2)
+        self.frame_bouton.grid(sticky="nsew", padx=10, pady=10)
+        self.titre.grid(pady=10)
+        self.texte_sous_le_titre.grid(padx=5)
 
         self.bouton_ajouter_action.config(state=NORMAL)
         self.bouton_modifier_action.config(state=NORMAL)
