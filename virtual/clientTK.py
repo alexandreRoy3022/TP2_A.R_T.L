@@ -95,34 +95,29 @@ class BourseApp(TKMT.ThemedTKinterFrame):
             json={"symbole": symbole, "nom de l'entreprise": nom_entreprise},
         )
         if response.status_code == 200:
-            self.input_symbole.delete(0, tk.END)
-            self.input_nom_entreprise.delete(0, tk.END)
+            messagebox.showinfo('Succès', 'Ajouté!')
         else:
-            print("Erreur")
+            messagebox.showinfo('Error', 'Erreur lors de la sauvegarder')
 
     def modifier_action(self):
         self.titre.grid_forget()
         self.texte_sous_le_titre.grid_forget()
         self.desactiver_boutons()
-
+        symboles = self.obtenir_symboles()
         lblTitre = ttk.Label(self.frame2, text="Veuillez répondre à chaque entrée ci-dessous")
         lblTitre.grid(column=0, row=0, padx=10, pady=10, sticky=W)
-
 
         addr_srv = "http://127.0.0.1:7000/obtenir_actions"
         response = requests.get(addr_srv)
         if response.status_code == 200:
             actions = response.json()
-            if actions:
-                self.liste_actions = {}
-                symboles = []
-                for action in actions:
-                    self.liste_actions[f"{action['symbole']}"] - action['nom de l\'entreprise']
-                    symboles.append(action["symbole"])
+            self.liste_actions = {f"{action['symbole']} - {action['nom entreprise']}": action for action in
+                                  actions}
 
-                ttk.Label(self.frame2, text="Sélectionnez une action").grid(column=0, row=1, sticky=W)
-                self.choix_actions = ttk.Combobox(self.frame2, values=symboles, state="readonly")
-                self.choix_actions.grid(column=1, row=1, padx=10, pady=10, sticky=W)
+            ttk.Label(self.frame2, text="Sélectionnez une action").grid(column=0, row=1, sticky=W)
+            self.choix_actions = ttk.Combobox(self.frame2, values=symboles, state="readonly")
+            self.choix_actions.grid(column=1, row=1, padx=10, pady=10, sticky=W)
+
 
         ttk.Label(self.frame2, text="Nouveau nom de l'entreprise").grid(column=0, row=2, padx=10, pady=10, sticky=W)
         self.input_nom_entreprise = ttk.Entry(self.frame2)
@@ -140,30 +135,21 @@ class BourseApp(TKMT.ThemedTKinterFrame):
 
 
     def soumettre_modification(self):
-        action_a_modifier = self.choix_actions.get()
-        if not action_a_modifier:
-            messagebox.showwarning("Erreur", "Veuillez sélectionner une action")
-            return
-
-        action = self.liste_actions.get(action_a_modifier)
-        if not action:
-            messagebox.showerror('Erreur', 'Aucune action disponible')
-
-        nouveau_symbole = self.input_symbole.get()
+        choix = self.choix_actions.get()
         nouveau_nom_entreprise = self.input_nom_entreprise.get()
+        nouveau_symbole = self.input_symbole.get()
 
-        if not nouveau_symbole or not nouveau_nom_entreprise:
-            messagebox.showwarning("Erreur", "Veuillez remplir les deux champs")
+        if not (choix and nouveau_symbole and nouveau_nom_entreprise):
+            messagebox.showwarning("Erreur", "Veuillez remplir tous les champs")
             return
 
-        donnee_changees = {}
-        if nouveau_symbole:
-            donnee_changees["symbole"] = nouveau_symbole
-        if nouveau_nom_entreprise:
-            donnee_changees['nom entreprise'] = nouveau_nom_entreprise
+        action = self.liste_actions[choix]
+        symbole_action = action['symbole']
+
 
         addr_srv = "http://127.0.0.1:7000"
-        response = requests.put(f"{addr_srv}/modifier_action/{action['symbole']}", json=donnee_changees)
+        response = requests.put(f"{addr_srv}/modifier_action/{symbole_action}",
+                                json={"nouveau_symbole": nouveau_symbole, "nouveau_nom_entreprise": nouveau_nom_entreprise})
 
         if response.status_code == 200:
             messagebox.showinfo("Succès", "L'action a été modifiée avec succès")
@@ -187,10 +173,10 @@ class BourseApp(TKMT.ThemedTKinterFrame):
         if response.status_code == 200:
             actions = response.json()
 
-
+            self.liste_actions = {f"{action['symbole']} - {action['nom entreprise']}": action for action in
+                                  actions}
             ttk.Label(self.frame2, text="Sélectionnez une action à supprimer").grid(column=0, row=1, sticky=W)
             self.choix_actions = ttk.Combobox(self.frame2, values=symboles, state="readonly")
-            self.choix_actions['values'] = self.liste_actions
             self.choix_actions.grid(column=1, row=1, padx=10, pady=10, sticky=W)
 
 
@@ -236,7 +222,7 @@ class BourseApp(TKMT.ThemedTKinterFrame):
         response = requests.get(addr_srv)
         if response.status_code == 200:
             actions = response.json()
-            self.liste_actions = {f"{actions['symbole']} - {actions['nom de l\'entreprise']}": action for action in actions}
+            self.liste_actions = {f"{action['symbole']} - {action['nom entreprise']}": action for action in actions}
 
             ttk.Label(self.frame2, text="Sélectionnez une action").grid(column=0, row=1, sticky=W)
             self.choix_actions = ttk.Combobox(self.frame2, values=symboles, state="readonly")
@@ -360,8 +346,7 @@ class BourseApp(TKMT.ThemedTKinterFrame):
 
         symboles = self.obtenir_symboles()
 
-        ttk.Label(self.frame2, text="Sélectionnez une action à supprimer").grid(column=0, row=1, sticky=W, padx=10,
-                                                                                pady=5)
+        ttk.Label(self.frame2, text="Sélectionnez une action à supprimer").grid(column=0, row=1, sticky=W, padx=10, pady=5)
         self.choix_symboles = ttk.Combobox(self.frame2, values=symboles, state="readonly")
         self.choix_symboles.grid(column=1, row=1, padx=10, pady=5, sticky=W)
 

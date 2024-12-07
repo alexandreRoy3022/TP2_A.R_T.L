@@ -124,8 +124,8 @@ def modifier_action(symbole):
 
     elif request.method == 'PUT':
         data = request.get_json()
-        symbole = data.get('symbole')
-        nom_entreprise = data.get('nom_entreprise')
+        symbole = data.get('nouveau_symbole')
+        nom_entreprise = data.get('nouveau_nom_entreprise')
 
         action = db.session.query(Action).filter_by(symbole=symbole).first()
         if action:
@@ -314,7 +314,8 @@ def supprimer_prix():
     elif request.method == 'DELETE':
         data = request.get_json()
         symbole = data.get('symbole')
-        action_prix = db.session.query(ActionPrix).filter_by(symbole=symbole).first()
+        date = data.get('date')
+        action_prix = db.session.query(ActionPrix).filter_by(symbole=symbole, date=date).first()
         db.session.delete(action_prix)
         db.session.commit()
         return redirect(url_for('menu'))
