@@ -40,7 +40,7 @@ class BourseApp(TKMT.ThemedTKinterFrame):
         self.bouton_supprimer_action.grid(pady=10, sticky="ew")
 
         self.bouton_quitter = ttk.Button(self.frame2, text="Quitter", command=self.root.destroy)
-        self.bouton_quitter.grid(sticky="ew")
+        self.bouton_quitter.grid(row=0, column=1, sticky="ne", padx=5, pady=5)
 
         self.bouton_ajouter_prix = ttk.Button(self.frame_bouton, text="Ajouter le prix d'une action", command=self.ajouter_prix)
         self.bouton_ajouter_prix.grid(pady=10, sticky="ew")
@@ -50,6 +50,9 @@ class BourseApp(TKMT.ThemedTKinterFrame):
 
         self.bouton_supprimer_prix = ttk.Button(self.frame_bouton, text="Supprimer le prix d'une action", command=self.supprimer_prix)
         self.bouton_supprimer_prix.grid(pady=10, sticky="ew")
+
+        self.bouton_afficher_graphiques = ttk.Button(self.frame_bouton, text="Afficher les graphiques d'une action", command=self.afficher_graphique)
+        self.bouton_afficher_graphiques.grid(pady=10, sticky="ew")
 
 
     def desactiver_boutons(self):
@@ -105,20 +108,21 @@ class BourseApp(TKMT.ThemedTKinterFrame):
         lblTitre = ttk.Label(self.frame2, text="Veuillez répondre à chaque entrée ci-dessous")
         lblTitre.grid(column=0, row=0, padx=10, pady=10, sticky=W)
 
-        ttk.Label(self.frame2, text="Sélectionnez une action").grid(column=0, row=1, sticky=W)
-        self.choix_actions = ttk.Combobox(self.frame2, state="readonly")
-        self.choix_actions.grid(column=1, row=1, padx=10, pady=10, sticky=W)
 
-        addr_srv = "http://127.0.0.1:7000"
-        response = requests.get(addr_srv + "/obtenir_actions")
+        addr_srv = "http://127.0.0.1:7000/obtenir_actions"
+        response = requests.get(addr_srv)
         if response.status_code == 200:
             actions = response.json()
-            self.liste_actions = {f"{actions['symbole']} - {actions['nom de l\'entreprise']}": action for action in actions}
-            self.choix_actions['values'] = list(self.liste_actions.keys())
-        else:
-            messagebox.showerror(title="Erreur", message="Aucune action disponible")
-            return
+            if actions:
+                self.liste_actions = {}
+                symboles = []
+                for action in actions:
+                    self.liste_actions[f"{action['symbole']}"] - action['nom de l\'entreprise']
+                    symboles.append(action["symbole"])
 
+                ttk.Label(self.frame2, text="Sélectionnez une action").grid(column=0, row=1, sticky=W)
+                self.choix_actions = ttk.Combobox(self.frame2, values=symboles, state="readonly")
+                self.choix_actions.grid(column=1, row=1, padx=10, pady=10, sticky=W)
 
         ttk.Label(self.frame2, text="Nouveau nom de l'entreprise").grid(column=0, row=2, padx=10, pady=10, sticky=W)
         self.input_nom_entreprise = ttk.Entry(self.frame2)
@@ -159,7 +163,7 @@ class BourseApp(TKMT.ThemedTKinterFrame):
             donnee_changees['nom entreprise'] = nouveau_nom_entreprise
 
         addr_srv = "http://127.0.0.1:7000"
-        response = requests.put(f"{addr_srv}/modifier_action/{action['Symbole']}", json=donnee_changees)
+        response = requests.put(f"{addr_srv}/modifier_action/{action['symbole']}", json=donnee_changees)
 
         if response.status_code == 200:
             messagebox.showinfo("Succès", "L'action a été modifiée avec succès")
@@ -176,14 +180,16 @@ class BourseApp(TKMT.ThemedTKinterFrame):
         lblTitre = ttk.Label(self.frame2, text="Veuillez répondre à chaque entrée ci-dessous")
         lblTitre.grid(column=0, row=0, padx=10, pady=10, sticky=W)
 
+        symboles = self.obtenir_symboles()
+
         addr_srv = "http://127.0.0.1:7000/obtenir_actions"
         response = requests.get(addr_srv)
-        if response.status_code == 201:
+        if response.status_code == 200:
             actions = response.json()
-            self.liste_actions = {f"{actions['symbole']} - {actions['nom de l\'entreprise']}": action for action in actions}
+
 
             ttk.Label(self.frame2, text="Sélectionnez une action à supprimer").grid(column=0, row=1, sticky=W)
-            self.choix_actions = ttk.Combobox(self.frame2, state="readonly")
+            self.choix_actions = ttk.Combobox(self.frame2, values=symboles, state="readonly")
             self.choix_actions['values'] = self.liste_actions
             self.choix_actions.grid(column=1, row=1, padx=10, pady=10, sticky=W)
 
@@ -252,7 +258,7 @@ class BourseApp(TKMT.ThemedTKinterFrame):
         self.input_prix_minimum = ttk.Entry(self.frame2)
         self.input_prix_minimum.grid(column=1, row=5, padx=10, pady=10, sticky=W)
 
-        self.bouton_soumettre_infos = ttk.Button(self.frame2, text="Supprimer", command=self.soumettre_infos)
+        self.bouton_soumettre_infos = ttk.Button(self.frame2, text="Ajouter le prix", command=self.soumettre_infos)
         self.bouton_soumettre_infos.grid(column=1, row=6, padx=10, pady=10, sticky=W)
 
         self.but_retourner_accueil = ttk.Button(self.frame2, text="Retourner à la page d'accueil",
@@ -311,7 +317,7 @@ class BourseApp(TKMT.ThemedTKinterFrame):
         self.input_prix_minimum = ttk.Entry(self.frame2)
         self.input_prix_minimum.grid(column=1, row=5, padx=10, pady=5, sticky=W)
 
-        self.bouton_soumettre_prix = ttk.Button(self.frame2, text="Supprimer", command=self.soumettre_prix)
+        self.bouton_soumettre_prix = ttk.Button(self.frame2, text="Soumettre la modification", command=self.soumettre_prix)
         self.bouton_soumettre_prix.grid(column=1, row=6, padx=10, pady=10, sticky=W)
 
         self.but_retourner_accueil = ttk.Button(self.frame2, text="Retourner à la page d'accueil",
@@ -383,13 +389,64 @@ class BourseApp(TKMT.ThemedTKinterFrame):
         if response.status_code == 200:
             messagebox.showinfo("Succès", "Prix supprimé")
 
+    def afficher_graphique(self):
+        self.titre.grid_forget()
+        self.texte_sous_le_titre.grid_forget()
+        self.desactiver_boutons()
+
+        lblTitre = ttk.Label(self.frame2, text="Veuillez répondre à chaque entrée ci-dessous")
+        lblTitre.grid(column=0, row=0, padx=10, pady=10, sticky=W)
+
+        symboles = self.obtenir_symboles()
+
+        ttk.Label(self.frame2, text="Sélectionnez une action").grid(column=0, row=1, sticky=W, padx=10,
+                                                                                pady=5)
+        self.choix_symboles = ttk.Combobox(self.frame2, values=symboles, state="readonly")
+        self.choix_symboles.grid(column=1, row=1, padx=10, pady=5, sticky=W)
+
+        ttk.Label(self.frame2, text="Date de début(MM-DD-YYYY").grid(column=0, row=2, sticky=W, padx=10, pady=5)
+        self.input_date_debut = ttk.Entry(self.frame2)
+        self.input_date_debut.grid(column=1, row=2, padx=10, pady=5, sticky=W)
+
+        ttk.Label(self.frame2, text="Date de fin(MM-DD-YYYY").grid(column=0, row=3, padx=10, pady=5, sticky=W)
+        self.input_date_fin = ttk.Entry(self.frame2)
+        self.input_date_fin.grid(column=1, row=3, padx=10, pady=5, sticky=W)
+
+        self.bouton_soumettre_affichage_graphiques = ttk.Button(self.frame2, text="Afficher graphiques",
+                                                            command=self.soumettre_affichage_graphiques)
+        self.bouton_soumettre_affichage_graphiques.grid(column=1, row=4, padx=10, pady=10, sticky=W)
+
+        self.but_retourner_accueil = ttk.Button(self.frame2, text="Retourner à la page d'accueil",
+                                                command=self.retourner_page_accueil)
+        self.but_retourner_accueil.grid(column=1, row=5, padx=10, pady=10, sticky=W)
+
+    def soumettre_affichage_graphiques(self):
+        symbole = self.choix_symboles.get()
+        date_debut = self.input_date_debut.get()
+        date_fin = self.input_date_fin.get()
+
+        if not (symbole and date_debut and date_fin):
+            messagebox.showerror("Erreur", "Veuillez remplir toutes les cases")
+
+        addr_srv = "http://127.0.0.1:7000"
+        response = requests.post(f"{addr_srv}/afficher_graphiques", json={"symbole": symbole, "date_debut": date_debut, "date_fin": date_fin})
+
+        if response.status_code == 200:
+            messagebox.showinfo("Succès", "Succès")
+        else:
+            messagebox.showerror("Ereur", "Impossible d'afficher les graphiques")
+
+
+
+
     def retourner_page_accueil(self):
         for widget in self.frame2.winfo_children():
             widget.grid_forget()
 
-        self.frame_bouton.grid(sticky="nsew", padx=10, pady=10)
+        self.frame_titre.grid(pady=10)
         self.titre.grid(pady=10)
         self.texte_sous_le_titre.grid(padx=5)
+        self.bouton_quitter.grid(row=0, column=1, padx=5, pady=5, sticky="ne")
 
         self.bouton_ajouter_action.config(state=NORMAL)
         self.bouton_modifier_action.config(state=NORMAL)

@@ -222,7 +222,7 @@ def modifier_prix():
         prix_max = request.form.get('prix_max')
         prix_min = request.form.get('prix_min')
 
-        if not prix or not prix_max or not prix_min:
+        if not prix or not prix_max or not prix_min or not symbole or not date:
             return render_template(
                 "modifier_prix.html",
                 symbole=symbole,
@@ -292,6 +292,14 @@ def modifier_prix():
 def supprimer_prix():
     symbole = request.form.get('symbole')
     date = request.form.get('date')
+
+    if not date or not symbole:
+        return render_template(
+            "supprimer_prix.html",
+            symbole=symbole,
+            date=date,
+            message="Veuillez remplir tous les champs"
+        )
 
     action_prix = db.session.query(ActionPrix).filter_by(symbole=symbole, date=date).first()
 
