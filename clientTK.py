@@ -54,6 +54,9 @@ class BourseApp(TKMT.ThemedTKinterFrame):
         self.bouton_afficher_graphiques = ttk.Button(self.frame_bouton, text="Afficher les graphiques d'une action", command=self.afficher_graphique)
         self.bouton_afficher_graphiques.grid(pady=10, sticky="ew")
 
+        self.bouton_afficher_prix_statistiques = ttk.Button(self.frame_bouton, text="Afficher les prix et les statistiques d'une action", command=self.prix_statistiques)
+        self.bouton_afficher_prix_statistiques.grid(pady=10, sticky="ew")
+
 
     def desactiver_boutons(self):
         self.bouton_ajouter_action.config(state=DISABLED)
@@ -92,12 +95,12 @@ class BourseApp(TKMT.ThemedTKinterFrame):
 
         response = requests.post(
             addr_srv + "/ajouter_action",
-            json={"symbole": symbole, "nom de l'entreprise": nom_entreprise},
+            json={"symbole": symbole, "nom_entreprise": nom_entreprise},
         )
         if response.status_code == 200:
             messagebox.showinfo('Succès', 'Ajouté!')
         else:
-            messagebox.showinfo('Error', 'Erreur lors de la sauvegarder')
+            messagebox.showinfo('Error', 'Erreur lors de la sauvegarde')
 
     def modifier_action(self):
         self.titre.grid_forget()
@@ -414,15 +417,49 @@ class BourseApp(TKMT.ThemedTKinterFrame):
             messagebox.showerror("Erreur", "Veuillez remplir toutes les cases")
 
         addr_srv = "http://127.0.0.1:7000"
-        response = requests.post(f"{addr_srv}/afficher_graphiques", json={"symbole": symbole, "date_debut": date_debut, "date_fin": date_fin})
+        response = requests.post(f"{addr_srv}/afficher_graphiques", {"symbole": symbole, "date_debut": date_debut, "date_fin": date_fin})
 
         if response.status_code == 200:
             messagebox.showinfo("Succès", "Succès")
         else:
             messagebox.showerror("Ereur", "Impossible d'afficher les graphiques")
 
+    def prix_statistiques(self):
+        self.titre.grid_forget()
+        self.texte_sous_le_titre.grid_forget()
+        self.desactiver_boutons()
 
+        lblTitre = ttk.Label(self.frame2, text="Affichage des des prix et des statistiques")
+        lblTitre.grid(column=0, row=0, padx=10, pady=10, sticky=W)
 
+        symboles = self.obtenir_symboles()
+        symboles.append("xyz")
+        ttk.Label(self.frame2, text="Sélectionnez une action").grid(column=0, row=1, sticky=W, padx=10,
+                                                                                pady=5)
+        self.choix_symboles = ttk.Combobox(self.frame2, values=symboles, state="readonly")
+        self.choix_symboles.grid(column=1, row=1, padx=10, pady=5, sticky=W)
+
+        self.bouton_soumettre_affichage_prix_statistiques = ttk.Button(self.frame2, text="Afficher prix et statistiques",
+                                                                command=self.afficher_prix_statistiques)
+        self.bouton_soumettre_affichage_prix_statistiques.grid(column=1, row=4, padx=10, pady=10, sticky=W)
+
+        self.but_retourner_accueil = ttk.Button(self.frame2, text="Retourner à la page d'accueil",
+                                                command=self.retourner_page_accueil)
+        self.but_retourner_accueil.grid(column=1, row=5, padx=10, pady=10, sticky=W)
+
+    def afficher_prix_statistiques(self):
+        symbole = self.choix_symboles.get()
+        if not symbole:
+            messagebox.showerror("Erreur", "Veuillez remplir toutes les cases")
+            return
+
+        addr_srv = "http://127.0.0.1:7000"
+        response = requests.post(f"{addr_srv}/operation_action", {"operation": "afficher_prix_statistiques", "symbole": symbole})
+
+        if response.status_code == 200:
+            messagebox.showinfo("Succès", "Succès")
+        else:
+            messagebox.showerror("Ereur", "Impossible d'afficher les prix et statistiques")
 
     def retourner_page_accueil(self):
         for widget in self.frame2.winfo_children():

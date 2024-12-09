@@ -72,12 +72,15 @@ def operation_action():
     elif operation == "afficher_prix_statistiques":
         liste_prix = []
         action_prix = db.session.query(ActionPrix).filter_by(symbole=symbole).order_by(db.asc(ActionPrix.date))
-        for info_prix in action_prix:
-            liste_prix.append(info_prix.prix)
-        moyenne = np.mean(liste_prix)
-        mediane = np.median(liste_prix)
-        return render_template("afficher_prix_statistiques.html", symbole=symbole, moyenne=moyenne, mediane=mediane, action_prix=action_prix)
-
+        if action_prix.count() > 0:
+            for info_prix in action_prix:
+                liste_prix.append(info_prix.prix)
+            moyenne = np.mean(liste_prix)
+            mediane = np.median(liste_prix)
+            return render_template("afficher_prix_statistiques.html", symbole=symbole, moyenne=moyenne, mediane=mediane, action_prix=action_prix)
+        else:
+            return render_template("afficher_prix_statistiques.html", symbole=symbole, moyenne=0, mediane=0,
+                                   action_prix=action_prix), 404
 
 @app.route("/ajouter_action", methods=['GET', 'POST'])
 def ajouter_action():

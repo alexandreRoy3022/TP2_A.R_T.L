@@ -9,7 +9,7 @@
 <body>
   <h1>Informations sur l'action</h1>
 
-    <form action="/modifier_prix?symbole={{ symbole }}&date={{ date }}" method="post">
+  <form action="/modifier_prix?symbole={{ symbole }}&date={{ date }}" method="post">
 
     <label for="symbole">Symbole boursier : </label>
     <input type="text" id="symbole" name="symbole" readonly value="{{ symbole }}">
@@ -32,8 +32,8 @@
     <br>
 
     <input type="submit" value="Modifier">
-
   </form>
+  <button type="button" onclick="window.location.replace('{{ url_for('menu') }}')">Annuler</button>
 
 
 </body>
