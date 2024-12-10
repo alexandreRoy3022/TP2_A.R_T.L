@@ -18,10 +18,6 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
-# engine = create_engine('sqlite:///instance/stocks.db', echo=True)
-# Session = sessionmaker(bind=engine)
-# session = Session()
-
 
 @app.route('/obtenir_actions', methods=['GET'])
 def obtenir_actions():
@@ -82,6 +78,7 @@ def operation_action():
             return render_template("afficher_prix_statistiques.html", symbole=symbole, moyenne=0, mediane=0,
                                    action_prix=action_prix), 404
 
+
 @app.route("/ajouter_action", methods=['GET', 'POST'])
 def ajouter_action():
     if request.method == 'POST':
@@ -126,25 +123,24 @@ def modifier_action(symbole):
             return render_template("modifier_action.html", symbole=symbole)
 
     elif request.method == 'PUT':
-        data = request.get_json()
-        symbole = data.get('nouveau_symbole')
-        nom_entreprise = data.get('nouveau_nom_entreprise')
+        symbole = request.form.get('symbole_action')
+        nouveau_symbole = request.form.get('nouveau_symbole')
+        nom_entreprise = request.form.get('nouveau_nom_entreprise')
 
         action = db.session.query(Action).filter_by(symbole=symbole).first()
         if action:
             action.nom_entreprise = nom_entreprise
-            action.symbole = symbole
+            action.symbole = nouveau_symbole
             db.session.commit()
 
     else:
         return render_template("modifier_action.html", symbole=symbole)
 
 
-@app.route("/supprimer_action", methods=['GET', 'POST', 'DELETE'])
+@app.route("/supprimer_action/", methods=['GET', 'POST', 'DELETE'])
 def supprimer_action():
     if request.method == 'POST':
         symbole = request.form['symbole']
-        nom_entreprise = request.form['nom_entreprise']
         action = db.session.query(Action).filter_by(symbole=symbole).first()
         if action:
             db.session.delete(action)
@@ -154,8 +150,7 @@ def supprimer_action():
             return render_template("menu_principal.html", symboles=obtenir_liste_symboles(), message="Symbole innexistant")
 
     elif request.method == 'DELETE':
-        data = request.get_json()
-        symbole = data.get('symbole')
+        symbole = request.form.get('symbole')
         action = db.session.query(ActionPrix).filter_by(symbole=symbole).first()
         if action:
             db.session.delete(action)
@@ -269,14 +264,13 @@ def modifier_prix():
             )
 
     elif request.method == 'PUT':
-        data = request.get_json()
-        symbole = data.get('symbole')
-        prix = data.get('prix')
-        prix_max = data.get('prix_max')
-        prix_min = data.get('prix_min')
-        date = data.get('date')
+        symbole = request.form.get('symbole')
+        prix = request.form.get('prix')
+        prix_max = request.form.get('prix_max')
+        prix_min = request.form.get('prix_min')
+        date = request.form.get('date')
 
-        action_prix = db.session.query(ActionPrix).filter_by(symbole=symbole).first()
+        action_prix = db.session.query(ActionPrix).filter_by(symbole=symbole, date=date).first()
         if action_prix:
             action_prix.prix = prix
             action_prix.prix_min = prix_min
@@ -315,9 +309,8 @@ def supprimer_prix():
             return render_template("supprimer_prix.html", symboles=symbole, date=date, message="Prix non trouvé")
 
     elif request.method == 'DELETE':
-        data = request.get_json()
-        symbole = data.get('symbole')
-        date = data.get('date')
+        symbole = request.form.get('symbole')
+        date = request.form.get('date')
         action_prix = db.session.query(ActionPrix).filter_by(symbole=symbole, date=date).first()
         db.session.delete(action_prix)
         db.session.commit()
@@ -351,13 +344,13 @@ def generer_graphique(symbole, date_debut, date_fin):
 @app.route('/afficher_graphiques', methods=['GET', 'POST'])
 def afficher_graphiques():
 
-    symbole = request.form['symbole']
+    symbole = request.form.get('symbole')
     date_debut = datetime.strptime(request.form.get('date_debut'), '%Y-%m-%d').date()
     date_fin = datetime.strptime(request.form.get('date_fin'), '%Y-%m-%d').date()
 
     graphique_barre, graphique_ligne = generer_graphique(symbole, date_debut, date_fin)
 
-    return render_template("afficher_graphiques.html", symbole=symbole, date_debut=date_debut, date_fin=date_fin, graphique_barre=graphique_barre, graphique_ligne=graphique_ligne )
+    return render_template("afficher_graphiques.html", symbole=symbole, date_debut=date_debut, date_fin=date_fin, graphique_barre=graphique_barre, graphique_ligne=graphique_ligne)
 
 
 if __name__ == '__main__':
